@@ -1,0 +1,134 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\Post;
+use App\Models\Category;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
+
+class PostController extends Controller
+{
+    public function index()
+    {
+        $posts = Post::with(['category', 'user'])
+                    ->latest()
+                    ->paginate(10);
+                    
+        return view('admin.posts.index', compact('posts'));
+    }
+
+    public function create()
+    {
+        $categories = Category::where('active', true)->get();
+        return view('admin.posts.create', compact('categories'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'title' => 'required|max:255',
+            'excerpt' => 'nullable|max:500',
+            'content' => 'required',
+            'category_id' => 'required|exists:categories,id',
+            'featured_image' => 'nullable|image|max:2048',
+            'image_position' => 'required|in:left,right,top,bottom',
+            'status' => 'required|in:draft,published,archived',
+            'comments_enabled' => 'boolean'
+        ]);
+
+        $validated['user_id'] = auth()->id();
+        $validated['comments_enabled'] = $request->has('comments_enabled');
+
+        // Handle image upload with WebP conversion
+        if ($request->hasFile('featured_image')) {
+            $validated['featured_image'] = $this->handleImageUpload($request->file('featured_image'));
+        }
+
+        $post = Post::create($validated);
+
+        return redirect()->route('admin.posts.index')
+                        ->with('success', 'Post creado exitosamente.');
+    }
+
+    public function edit(Post $post)
+    {
+        $categories = Category::where('active', true)->get();
+        return view('admin.posts.edit', compact('post', 'categories'));
+    }
+
+    public function update(Request $request, Post $post)
+    {
+        $validated = $request->validate([
+            'title' => 'required|max:255',
+            'excerpt' => 'nullable|max:500',
+            'content' => 'required',
+            'category_id' => 'required|exists:categories,id',
+            'featured_image' => 'nullable|image|max:2048',
+            'image_position' => 'required|in:left,right,top,bottom',
+            'status' => 'required|in:draft,published,archived',
+            'comments_enabled' => 'boolean'
+        ]);
+
+        $validated['comments_enabled'] = $request->has('comments_enabled');
+
+        // Handle image upload
+        if ($request->hasFile('featured_image')) {
+            // Delete old image
+            if ($post->featured_image) {
+                Storage::disk('public')->delete($post->featured_image);
+            }
+            $validated['featured_image'] = $this->handleImageUpload($request->file('featured_image'));
+        }
+
+        $post->update($validated);
+
+        return redirect()->route('admin.posts.index')
+                        ->with('success', 'Post actualizado exitosamente.');
+    }
+
+    public function destroy(Post $post)
+    {
+        if ($post->featured_image) {
+            Storage::disk('public')->delete($post->featured_image);
+        }
+        
+        $post->delete();
+
+        return redirect()->route('admin.posts.index')
+                        ->with('success', 'Post eliminado exitosamente.');
+    }
+
+    public function uploadImage(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|image|max:2048'
+        ]);
+
+        $path = $this->handleImageUpload($request->file('file'));
+        
+        return response()->json([
+            'location' => asset('storage/' . $path)
+        ]);
+    }
+
+    private function handleImageUpload($file)
+    {
+        $filename = time() . '_' . uniqid() . '.webp';
+        $path = 'images/' . $filename;
+
+        // Create WebP image with 95% quality
+        $image = Image::make($file)
+                     ->encode('webp', 95)
+                     ->resize(1200, null, function ($constraint) {
+                         $constraint->aspectRatio();
+                         $constraint->upsize();
+                     });
+
+        Storage::disk('public')->put($path, $image);
+
+        return $path;
+    }
+}
