@@ -16,40 +16,85 @@
 @section('content')
 <div class="max-w-4xl mx-auto">
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Editar Post</h2>
-                    <a href="{{ route('blog.show', $post->slug) }}" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
-                        Ver Post
-                    </a>
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Editar Post</h2>
+                        <a href="{{ route('blog.show', $post->slug) }}" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                            Ver Post
+                        </a>
+                    </div>
+                    
+                    <!-- Language Selector -->
+                    <div class="flex items-center space-x-4">
+                        <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Editando en:
+                        </label>
+                        <div class="flex space-x-2">
+                            @foreach($languages as $language)
+                                @php
+                                    $hasTranslation = $language->code === 'es' || $post->getTranslation($language->code);
+                                    $isActive = $currentLanguage === $language->code;
+                                @endphp
+                                <a href="{{ route('admin.posts.edit', ['post' => $post->slug, 'lang' => $language->code]) }}"
+                                   class="px-3 py-1 text-sm rounded-full transition-colors {{ $isActive 
+                                       ? 'bg-blue-600 text-white' 
+                                       : ($hasTranslation 
+                                           ? 'bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-900 dark:text-green-300' 
+                                           : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-400') }}">
+                                    {{ strtoupper($language->code) }}
+                                    @if($hasTranslation && !$isActive)
+                                        <span class="ml-1 text-xs">✓</span>
+                                    @elseif(!$hasTranslation)
+                                        <span class="ml-1 text-xs">+</span>
+                                    @endif
+                                </a>
+                            @endforeach
+                        </div>
+                        @if($translation)
+                            <span class="text-xs text-green-600 dark:text-green-400">
+                                Traducción existente
+                            </span>
+                        @elseif($currentLanguage !== 'es')
+                            <span class="text-xs text-yellow-600 dark:text-yellow-400">
+                                Nueva traducción
+                            </span>
+                        @endif
+                    </div>
                 </div>
 
                 <form action="{{ route('admin.posts.update', $post) }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-6">
                     @csrf
                     @method('PUT')
+                    
+                    <!-- Hidden language field -->
+                    <input type="hidden" name="language" value="{{ $currentLanguage }}">
 
                     <!-- Title -->
                     <div>
                         <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Título *
+                            Título * 
+                            <span class="text-xs text-gray-500">({{ strtoupper($currentLanguage) }})</span>
                         </label>
-                        <input type="text" id="title" name="title" value="{{ old('title', $post->title) }}" required
+                        <input type="text" id="title" name="title" value="{{ old('title', $postData->title) }}" required
                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
                         @error('title')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <!-- Slug -->
-                    <div>
-                        <label for="slug" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Slug *
-                        </label>
-                        <input type="text" id="slug" name="slug" value="{{ old('slug', $post->slug) }}" required
-                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
-                        @error('slug')
-                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                        @enderror
-                    </div>
+                    @if($currentLanguage === 'es')
+                        <!-- Slug (only for main language) -->
+                        <div>
+                            <label for="slug" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Slug *
+                            </label>
+                            <input type="text" id="slug" name="slug" value="{{ old('slug', $post->slug) }}" required
+                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                            @error('slug')
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    @endif
 
                     <!-- Category and Status -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -91,9 +136,10 @@
                     <div>
                         <label for="excerpt" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Extracto
+                            <span class="text-xs text-gray-500">({{ strtoupper($currentLanguage) }})</span>
                         </label>
                         <textarea id="excerpt" name="excerpt" rows="3" 
-                                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">{{ old('excerpt', $post->excerpt) }}</textarea>
+                                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">{{ old('excerpt', $postData->excerpt) }}</textarea>
                         @error('excerpt')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
@@ -153,8 +199,9 @@
                     <div>
                         <label for="content" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Contenido *
+                            <span class="text-xs text-gray-500">({{ strtoupper($currentLanguage) }})</span>
                         </label>
-                        <textarea id="content" name="content" required class="w-full">{{ old('content', $post->content) }}</textarea>
+                        <textarea id="content" name="content" required class="w-full">{{ old('content', $postData->content) }}</textarea>
                         @error('content')
                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
