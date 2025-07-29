@@ -176,6 +176,7 @@ class AnalyticsController extends Controller
                     'bounce_rate' => $post->analytics->avg('bounce_rate') ?? 0
                 ];
             })
+            ->where('total_views', '>', 0) // Only show posts with views
             ->sortByDesc('total_views')
             ->take(20);
 
@@ -194,7 +195,7 @@ class AnalyticsController extends Controller
                     'total_views' => $totalViews
                 ];
             })
-            ->where('total_views', '>', 10) // Only posts with significant views
+            ->where('total_views', '>', 0) // Only posts with views
             ->sortByDesc('avg_time')
             ->take(10);
 

@@ -469,9 +469,8 @@ class AnalyticsTracker {
 
 // Initialize analytics tracker when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    // Only initialize if not in admin or development environment
-    if (!window.location.pathname.startsWith('/admin') && 
-        !window.location.hostname.includes('localhost')) {
+    // Only initialize if not in admin environment
+    if (!window.location.pathname.startsWith('/admin')) {
         window.analyticsTracker = new AnalyticsTracker();
     }
 });
