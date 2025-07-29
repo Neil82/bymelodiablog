@@ -1,6 +1,13 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="{{ session('theme', 'light') }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
+    <script>
+        // Apply theme immediately to prevent FOUC
+        (function() {
+            const theme = localStorage.getItem('admin-theme') || 'light';
+            document.documentElement.className = theme; // Replace all classes
+        })();
+    </script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -245,46 +252,101 @@
 
     <!-- Scripts -->
     <script>
-        // Mobile menu toggle
-        document.getElementById('mobile-menu-button').addEventListener('click', function() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            
-            sidebar.classList.toggle('-translate-x-full');
-            overlay.classList.toggle('hidden');
-        });
-
-        // Close sidebar when clicking overlay
-        document.getElementById('sidebar-overlay').addEventListener('click', function() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            
-            sidebar.classList.add('-translate-x-full');
-            overlay.classList.add('hidden');
-        });
-
-        // Sidebar group toggles
-        document.querySelectorAll('.sidebar-group-header').forEach(header => {
-            header.addEventListener('click', function() {
-                const group = this.parentElement;
-                const submenu = group.querySelector('.sidebar-submenu');
-                const arrow = this.querySelector('svg:last-child');
+        // Theme toggle functionality - Execute immediately
+        (function() {
+            function initTheme() {
+                const themeToggle = document.getElementById('theme-toggle');
+                const themeIcon = document.getElementById('theme-icon');
                 
-                submenu.classList.toggle('hidden');
-                arrow.classList.toggle('rotate-180');
-            });
-        });
-
-        // Initialize sidebar groups state
-        document.querySelectorAll('.sidebar-group').forEach(group => {
-            const header = group.querySelector('.sidebar-group-header');
-            const submenu = group.querySelector('.sidebar-submenu');
-            const arrow = header.querySelector('svg:last-child');
-            
-            if (header.classList.contains('active')) {
-                submenu.classList.remove('hidden');
-                arrow.classList.add('rotate-180');
+                if (themeToggle && themeIcon) {
+                    // Get current theme from localStorage or default to light
+                    function getCurrentTheme() {
+                        return localStorage.getItem('admin-theme') || 'light';
+                    }
+                    
+                    // Apply theme to document
+                    function applyTheme(theme) {
+                        document.documentElement.className = theme;
+                        localStorage.setItem('admin-theme', theme);
+                        updateThemeIcon(theme);
+                    }
+                    
+                    // Update theme icon based on current theme
+                    function updateThemeIcon(theme = null) {
+                        if (!theme) theme = getCurrentTheme();
+                        themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+                    }
+                    
+                    // Initialize theme and icon on page load
+                    const currentTheme = getCurrentTheme();
+                    applyTheme(currentTheme);
+                    
+                    // Theme toggle event
+                    themeToggle.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const currentTheme = getCurrentTheme();
+                        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                        applyTheme(newTheme);
+                    });
+                }
             }
+            
+            // Try to initialize immediately, fallback to DOMContentLoaded
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initTheme);
+            } else {
+                initTheme();
+            }
+        })();
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', function() {
+                    const sidebar = document.getElementById('sidebar');
+                    const overlay = document.getElementById('sidebar-overlay');
+                    
+                    sidebar.classList.toggle('-translate-x-full');
+                    overlay.classList.toggle('hidden');
+                });
+            }
+
+            // Close sidebar when clicking overlay
+            const sidebarOverlay = document.getElementById('sidebar-overlay');
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', function() {
+                    const sidebar = document.getElementById('sidebar');
+                    const overlay = document.getElementById('sidebar-overlay');
+                    
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                });
+            }
+
+            // Sidebar group toggles
+            document.querySelectorAll('.sidebar-group-header').forEach(header => {
+                header.addEventListener('click', function() {
+                    const group = this.parentElement;
+                    const submenu = group.querySelector('.sidebar-submenu');
+                    const arrow = this.querySelector('svg:last-child');
+                    
+                    submenu.classList.toggle('hidden');
+                    arrow.classList.toggle('rotate-180');
+                });
+            });
+
+            // Initialize sidebar groups state
+            document.querySelectorAll('.sidebar-group').forEach(group => {
+                const header = group.querySelector('.sidebar-group-header');
+                const submenu = group.querySelector('.sidebar-submenu');
+                const arrow = header.querySelector('svg:last-child');
+                
+                if (header.classList.contains('active')) {
+                    submenu.classList.remove('hidden');
+                    arrow.classList.add('rotate-180');
+                }
+            });
         });
     </script>
 
