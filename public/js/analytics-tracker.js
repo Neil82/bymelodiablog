@@ -1,23 +1,29 @@
+// Advanced Analytics Tracking System
 class AnalyticsTracker {
     constructor() {
         this.sessionId = this.generateSessionId();
-        this.events = [];
-        this.currentUrl = window.location.href;
-        this.currentTitle = document.title;
         this.startTime = Date.now();
         this.lastActivityTime = Date.now();
-        this.isSessionStarted = false;
-        this.sendInterval = null;
-        this.position = null;
+        this.trackingInterval = null;
+        this.pageStartTime = Date.now();
+        this.maxScrollDepth = 0;
+        this.isActive = true;
+        this.eventQueue = [];
+        this.config = {
+            trackingInterval: 20000, // 20 seconds
+            apiEndpoint: '/api/tracking',
+            batchSize: 10,
+            sessionTimeout: 30 * 60 * 1000 // 30 minutes
+        };
+        
+        this.init();
     }
 
     async init() {
         try {
-            await this.detectBrowserInfo();
-            await this.detectLocation();
             await this.initializeSession();
+            this.startTracking();
             this.bindEvents();
-            this.startPeriodicSend();
             this.trackPageView();
         } catch (error) {
             console.error('Failed to initialize analytics tracker:', error);
@@ -28,59 +34,35 @@ class AnalyticsTracker {
         return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
     }
 
-    async detectBrowserInfo() {
-        const ua = navigator.userAgent;
-        this.browserInfo = {
-            user_agent: ua,
-            language_code: navigator.language || navigator.userLanguage,
-            device_type: this.detectDeviceType(ua),
-            browser: this.detectBrowser(ua),
-            browser_version: this.detectBrowserVersion(ua),
-            os: this.detectOS(ua),
-            os_version: this.detectOSVersion(ua)
-        };
-    }
-
-    async detectLocation() {
-        try {
-            if ('geolocation' in navigator) {
-                const position = await new Promise((resolve, reject) => {
-                    navigator.geolocation.getCurrentPosition(resolve, reject, {
-                        timeout: 5000,
-                        enableHighAccuracy: false
-                    });
-                });
-                this.position = {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude
-                };
-            }
-        } catch (error) {
-            console.log('Geolocation not available or denied:', error);
-            this.position = null;
-        }
-    }
-
     async initializeSession() {
-        try {
-            const sessionData = {
-                session_id: this.sessionId,
-                user_agent: this.browserInfo.user_agent,
-                language_code: this.browserInfo.language_code,
-                referrer: document.referrer || null,
-                latitude: this.position?.latitude || null,
-                longitude: this.position?.longitude || null,
-                device_type: this.browserInfo.device_type,
-                browser: this.browserInfo.browser,
-                browser_version: this.browserInfo.browser_version,
-                os: this.browserInfo.os,
-                os_version: this.browserInfo.os_version,
-                utm_source: this.getUrlParameter('utm_source'),
-                utm_medium: this.getUrlParameter('utm_medium'),
-                utm_campaign: this.getUrlParameter('utm_campaign'),
-                started_at: new Date().toISOString()
-            };
+        const sessionData = {
+            session_id: this.sessionId,
+            user_agent: navigator.userAgent,
+            language_code: navigator.language.split('-')[0],
+            referrer: document.referrer || null,
+            started_at: new Date().toISOString()
+        };
 
+        // Geolocation will be handled server-side using IP address
+
+        // Detect device type
+        sessionData.device_type = this.detectDeviceType();
+        
+        // Detect browser info
+        const browserInfo = this.detectBrowser();
+        sessionData.browser = browserInfo.name;
+        sessionData.browser_version = browserInfo.version;
+        
+        // Detect OS
+        const osInfo = this.detectOS();
+        sessionData.os = osInfo.name;
+        sessionData.os_version = osInfo.version;
+
+        // Parse UTM parameters
+        const utmParams = this.parseUTMParameters();
+        Object.assign(sessionData, utmParams);
+
+        try {
             const response = await fetch('/api/tracking/session/start', {
                 method: 'POST',
                 headers: {
@@ -91,227 +73,415 @@ class AnalyticsTracker {
             });
 
             if (!response.ok) {
-                if (response.status === 419) {
-                    console.error('CSRF token mismatch - analytics disabled');
-                    return;
-                }
                 throw new Error('Failed to initialize session');
             }
 
             const result = await response.json();
-            this.isSessionStarted = result.success;
-            
+            console.log('Analytics session initialized:', result.session_id);
         } catch (error) {
             console.error('Failed to initialize session:', error);
-            throw error;
         }
+    }
+
+
+    detectDeviceType() {
+        const userAgent = navigator.userAgent.toLowerCase();
+        
+        if (/tablet|ipad|playbook|silk/i.test(userAgent)) {
+            return 'tablet';
+        }
+        
+        if (/mobile|iphone|ipod|android|blackberry|opera|mini|windows\sce|palm|smartphone|iemobile/i.test(userAgent)) {
+            return 'mobile';
+        }
+        
+        return 'desktop';
+    }
+
+    detectBrowser() {
+        const userAgent = navigator.userAgent;
+        let browserName = 'Unknown';
+        let browserVersion = 'Unknown';
+
+        if (userAgent.indexOf('Chrome') > -1) {
+            browserName = 'Chrome';
+            browserVersion = userAgent.match(/Chrome\/([0-9.]+)/)?.[1] || 'Unknown';
+        } else if (userAgent.indexOf('Firefox') > -1) {
+            browserName = 'Firefox';
+            browserVersion = userAgent.match(/Firefox\/([0-9.]+)/)?.[1] || 'Unknown';
+        } else if (userAgent.indexOf('Safari') > -1) {
+            browserName = 'Safari';
+            browserVersion = userAgent.match(/Version\/([0-9.]+)/)?.[1] || 'Unknown';
+        } else if (userAgent.indexOf('Edge') > -1) {
+            browserName = 'Edge';
+            browserVersion = userAgent.match(/Edge\/([0-9.]+)/)?.[1] || 'Unknown';
+        }
+
+        return { name: browserName, version: browserVersion };
+    }
+
+    detectOS() {
+        const userAgent = navigator.userAgent;
+        let osName = 'Unknown';
+        let osVersion = 'Unknown';
+
+        if (userAgent.indexOf('Windows NT') > -1) {
+            osName = 'Windows';
+            osVersion = userAgent.match(/Windows NT ([0-9.]+)/)?.[1] || 'Unknown';
+        } else if (userAgent.indexOf('Mac OS X') > -1) {
+            osName = 'macOS';
+            osVersion = userAgent.match(/Mac OS X ([0-9_]+)/)?.[1]?.replace(/_/g, '.') || 'Unknown';
+        } else if (userAgent.indexOf('Linux') > -1) {
+            osName = 'Linux';
+        } else if (userAgent.indexOf('Android') > -1) {
+            osName = 'Android';
+            osVersion = userAgent.match(/Android ([0-9.]+)/)?.[1] || 'Unknown';
+        } else if (userAgent.indexOf('iOS') > -1) {
+            osName = 'iOS';
+            osVersion = userAgent.match(/OS ([0-9_]+)/)?.[1]?.replace(/_/g, '.') || 'Unknown';
+        }
+
+        return { name: osName, version: osVersion };
+    }
+
+    parseUTMParameters() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return {
+            utm_source: urlParams.get('utm_source'),
+            utm_medium: urlParams.get('utm_medium'),
+            utm_campaign: urlParams.get('utm_campaign')
+        };
+    }
+
+    startTracking() {
+        // Track every 20 seconds
+        this.trackingInterval = setInterval(() => {
+            this.trackActivity();
+        }, this.config.trackingInterval);
+
+        // Track when page becomes hidden/visible
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                this.trackPageHidden();
+            } else {
+                this.trackPageVisible();
+            }
+        });
+
+        // Track when user is about to leave
+        window.addEventListener('beforeunload', () => {
+            this.trackPageUnload();
+        });
+    }
+
+    bindEvents() {
+        // Track scroll depth
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                this.trackScrollDepth();
+            }, 250);
+        });
+
+        // Track clicks
+        document.addEventListener('click', (e) => {
+            this.trackClick(e);
+        });
+
+        // Track mouse movement for activity detection
+        document.addEventListener('mousemove', () => {
+            this.updateLastActivity();
+        });
+
+        // Track keyboard activity
+        document.addEventListener('keypress', () => {
+            this.updateLastActivity();
+        });
+
+        // Track form submissions
+        document.addEventListener('submit', (e) => {
+            this.trackFormSubmission(e);
+        });
+    }
+
+    updateLastActivity() {
+        this.lastActivityTime = Date.now();
+        this.isActive = true;
     }
 
     trackPageView() {
-        this.addEvent('page_view', {
-            url: this.currentUrl,
-            page_title: this.currentTitle,
-            post_id: this.extractPostId()
-        });
-    }
-
-    trackClick(element) {
-        this.addEvent('click', {
-            url: this.currentUrl,
-            element_clicked: this.getElementSelector(element)
-        });
-    }
-
-    trackScroll() {
-        const scrollDepth = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
-        this.addEvent('scroll', {
-            url: this.currentUrl,
-            scroll_depth: Math.min(scrollDepth, 100)
-        });
-    }
-
-    addEvent(eventType, data = {}) {
-        if (!this.isSessionStarted) return;
-
-        const event = {
-            session_id: this.sessionId,
-            event_type: eventType,
-            url: data.url || this.currentUrl,
-            page_title: data.page_title || this.currentTitle,
-            post_id: data.post_id || null,
-            time_on_page: data.time_on_page || Math.round((Date.now() - this.startTime) / 1000),
-            scroll_depth: data.scroll_depth || null,
-            element_clicked: data.element_clicked || null,
-            event_data: data.event_data || null,
-            event_time: new Date().toISOString()
+        const eventData = {
+            event_type: 'page_view',
+            url: window.location.href,
+            page_title: document.title,
+            event_time: new Date().toISOString(),
+            post_id: this.getPostId()
         };
 
-        this.events.push(event);
-        this.lastActivityTime = Date.now();
+        this.queueEvent(eventData);
+    }
 
-        // Send immediately for important events
-        if (['page_view', 'click'].includes(eventType)) {
-            this.sendEvents();
+    trackActivity() {
+        const now = Date.now();
+        const timeOnPage = Math.floor((now - this.pageStartTime) / 1000);
+        
+        const eventData = {
+            event_type: 'activity_heartbeat',
+            url: window.location.href,
+            page_title: document.title,
+            time_on_page: timeOnPage,
+            scroll_depth: this.maxScrollDepth,
+            event_time: new Date().toISOString(),
+            post_id: this.getPostId(),
+            event_data: {
+                is_active: this.isActive,
+                time_since_last_activity: now - this.lastActivityTime
+            }
+        };
+
+        this.queueEvent(eventData);
+        
+        // Reset activity flag
+        this.isActive = false;
+    }
+
+    trackScrollDepth() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const documentHeight = Math.max(
+            document.body.scrollHeight,
+            document.body.offsetHeight,
+            document.documentElement.clientHeight,
+            document.documentElement.scrollHeight,
+            document.documentElement.offsetHeight
+        );
+        const windowHeight = window.innerHeight;
+        const scrollPercent = Math.round((scrollTop / (documentHeight - windowHeight)) * 100);
+        
+        if (scrollPercent > this.maxScrollDepth) {
+            this.maxScrollDepth = Math.min(scrollPercent, 100);
+            
+            // Track milestone scroll depths
+            if (this.maxScrollDepth >= 25 && this.maxScrollDepth % 25 === 0) {
+                const eventData = {
+                    event_type: 'scroll_milestone',
+                    url: window.location.href,
+                    scroll_depth: this.maxScrollDepth,
+                    event_time: new Date().toISOString(),
+                    post_id: this.getPostId()
+                };
+                
+                this.queueEvent(eventData);
+            }
         }
     }
 
-    async sendEvents() {
-        if (this.events.length === 0 || !this.isSessionStarted) return;
+    trackClick(event) {
+        const element = event.target;
+        const elementInfo = this.getElementInfo(element);
+        
+        const eventData = {
+            event_type: 'click',
+            url: window.location.href,
+            element_clicked: elementInfo.selector,
+            event_time: new Date().toISOString(),
+            post_id: this.getPostId(),
+            event_data: {
+                element_type: element.tagName.toLowerCase(),
+                element_text: elementInfo.text,
+                element_href: element.href || null,
+                coordinates: {
+                    x: event.clientX,
+                    y: event.clientY
+                }
+            }
+        };
+
+        this.queueEvent(eventData);
+    }
+
+    trackFormSubmission(event) {
+        const form = event.target;
+        const formData = new FormData(form);
+        const formFields = {};
+        
+        for (let [key, value] of formData.entries()) {
+            // Don't track sensitive data
+            if (!this.isSensitiveField(key)) {
+                formFields[key] = typeof value === 'string' ? value.substring(0, 100) : 'file';
+            }
+        }
+
+        const eventData = {
+            event_type: 'form_submission',
+            url: window.location.href,
+            event_time: new Date().toISOString(),
+            event_data: {
+                form_id: form.id || null,
+                form_action: form.action || null,
+                form_method: form.method || 'GET',
+                field_count: Object.keys(formFields).length,
+                fields: formFields
+            }
+        };
+
+        this.queueEvent(eventData);
+    }
+
+    trackPageHidden() {
+        const timeOnPage = Math.floor((Date.now() - this.pageStartTime) / 1000);
+        
+        const eventData = {
+            event_type: 'page_hidden',
+            url: window.location.href,
+            time_on_page: timeOnPage,
+            scroll_depth: this.maxScrollDepth,
+            event_time: new Date().toISOString(),
+            post_id: this.getPostId()
+        };
+
+        this.queueEvent(eventData);
+        this.flushEventQueue();
+    }
+
+    trackPageVisible() {
+        const eventData = {
+            event_type: 'page_visible',
+            url: window.location.href,
+            event_time: new Date().toISOString(),
+            post_id: this.getPostId()
+        };
+
+        this.queueEvent(eventData);
+    }
+
+    trackPageUnload() {
+        const timeOnPage = Math.floor((Date.now() - this.pageStartTime) / 1000);
+        
+        const eventData = {
+            event_type: 'page_unload',
+            url: window.location.href,
+            time_on_page: timeOnPage,
+            scroll_depth: this.maxScrollDepth,
+            event_time: new Date().toISOString(),
+            post_id: this.getPostId()
+        };
+
+        this.queueEvent(eventData);
+        this.flushEventQueue();
+    }
+
+    queueEvent(eventData) {
+        this.eventQueue.push({
+            ...eventData,
+            session_id: this.sessionId
+        });
+
+        if (this.eventQueue.length >= this.config.batchSize) {
+            this.flushEventQueue();
+        }
+    }
+
+    async flushEventQueue() {
+        if (this.eventQueue.length === 0) return;
+
+        const events = [...this.eventQueue];
+        this.eventQueue = [];
 
         try {
-            const eventsToSend = [...this.events];
-            this.events = [];
-
             const response = await fetch('/api/tracking/events', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': this.getCSRFToken()
                 },
-                body: JSON.stringify({ events: eventsToSend })
+                body: JSON.stringify({ events })
             });
 
             if (!response.ok) {
-                // Put events back if failed
-                this.events.unshift(...eventsToSend);
-                throw new Error('Failed to send events');
+                throw new Error('Failed to send tracking events');
             }
-
         } catch (error) {
-            console.error('Failed to send analytics events:', error);
+            console.error('Failed to send tracking events:', error);
+            // Re-queue events for retry
+            this.eventQueue.unshift(...events);
         }
     }
 
-    bindEvents() {
-        // Track clicks
-        document.addEventListener('click', (e) => {
-            this.trackClick(e.target);
-        });
-
-        // Track scroll
-        let scrollTimeout;
-        window.addEventListener('scroll', () => {
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => {
-                this.trackScroll();
-            }, 250);
-        });
-
-        // Track page unload
-        window.addEventListener('beforeunload', () => {
-            this.endSession();
-        });
-
-        // Track page visibility changes
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                this.sendEvents();
-            }
-        });
-    }
-
-    startPeriodicSend() {
-        this.sendInterval = setInterval(() => {
-            this.sendEvents();
-        }, 10000); // Send every 10 seconds
-    }
-
-    async endSession() {
-        if (!this.isSessionStarted) return;
-
-        this.sendEvents();
-
-        try {
-            await fetch('/api/tracking/session/end', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': this.getCSRFToken()
-                },
-                body: JSON.stringify({ session_id: this.sessionId })
-            });
-        } catch (error) {
-            console.error('Failed to end session:', error);
+    getElementInfo(element) {
+        let selector = element.tagName.toLowerCase();
+        
+        if (element.id) {
+            selector += '#' + element.id;
+        }
+        
+        if (element.className) {
+            selector += '.' + element.className.split(' ').join('.');
         }
 
-        if (this.sendInterval) {
-            clearInterval(this.sendInterval);
-        }
+        const text = element.textContent || element.value || element.alt || '';
+        
+        return {
+            selector: selector,
+            text: text.substring(0, 100) // Limit text length
+        };
     }
 
-    // Helper methods
-    getCSRFToken() {
-        const token = document.querySelector('meta[name="csrf-token"]');
-        if (!token) {
-            console.warn('CSRF token not found - analytics may not work');
-            return '';
+    getPostId() {
+        // Try to get post ID from meta tag or URL
+        const metaPostId = document.querySelector('meta[name="post-id"]');
+        if (metaPostId) {
+            return parseInt(metaPostId.getAttribute('content'));
         }
-        return token.getAttribute('content');
-    }
 
-    getUrlParameter(name) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(name);
-    }
-
-    extractPostId() {
-        // Try to extract post ID from URL or meta tags
-        const postMeta = document.querySelector('meta[name="post-id"]');
-        if (postMeta) {
-            return parseInt(postMeta.getAttribute('content'));
+        // Try to extract from URL pattern
+        const urlMatch = window.location.pathname.match(/\/posts?\/(\d+)/);
+        if (urlMatch) {
+            return parseInt(urlMatch[1]);
         }
+
         return null;
     }
 
-    getElementSelector(element) {
-        if (element.id) return `#${element.id}`;
-        if (element.className) return `.${element.className.split(' ')[0]}`;
-        return element.tagName.toLowerCase();
+    isSensitiveField(fieldName) {
+        const sensitiveFields = [
+            'password', 'pass', 'pwd', 'secret', 'token', 'key',
+            'credit_card', 'card_number', 'cvv', 'ssn', 'social_security'
+        ];
+        
+        return sensitiveFields.some(field => 
+            fieldName.toLowerCase().includes(field)
+        );
     }
 
-    detectDeviceType(ua) {
-        if (/tablet|ipad|playbook|silk/i.test(ua)) return 'tablet';
-        if (/mobile|iphone|ipod|android|blackberry|opera|mini|windows\sce|palm|smartphone|iemobile/i.test(ua)) return 'mobile';
-        return 'desktop';
+    getCSRFToken() {
+        const metaTag = document.querySelector('meta[name="csrf-token"]');
+        return metaTag ? metaTag.getAttribute('content') : '';
     }
 
-    detectBrowser(ua) {
-        if (ua.includes('Firefox')) return 'Firefox';
-        if (ua.includes('Chrome')) return 'Chrome';
-        if (ua.includes('Safari')) return 'Safari';
-        if (ua.includes('Edge')) return 'Edge';
-        if (ua.includes('Opera')) return 'Opera';
-        return 'Unknown';
-    }
-
-    detectBrowserVersion(ua) {
-        const match = ua.match(/(chrome|firefox|safari|edge|opera)\/?\s*(\d+)/i);
-        return match ? match[2] : 'Unknown';
-    }
-
-    detectOS(ua) {
-        if (ua.includes('Windows')) return 'Windows';
-        if (ua.includes('Mac')) return 'macOS';
-        if (ua.includes('Linux')) return 'Linux';
-        if (ua.includes('Android')) return 'Android';
-        if (ua.includes('iOS')) return 'iOS';
-        return 'Unknown';
-    }
-
-    detectOSVersion(ua) {
-        if (ua.includes('Windows NT 10.0')) return '10';
-        if (ua.includes('Windows NT 6.3')) return '8.1';
-        if (ua.includes('Windows NT 6.1')) return '7';
-        if (ua.includes('Mac OS X')) {
-            const match = ua.match(/Mac OS X (\d+[._]\d+)/);
-            return match ? match[1].replace('_', '.') : 'Unknown';
+    destroy() {
+        if (this.trackingInterval) {
+            clearInterval(this.trackingInterval);
         }
-        return 'Unknown';
+        this.flushEventQueue();
     }
 }
 
-// Initialize analytics when DOM is ready
+// Initialize analytics tracker when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    window.analyticsTracker = new AnalyticsTracker();
-    window.analyticsTracker.init();
+    // Only initialize if not in admin or development environment
+    if (!window.location.pathname.startsWith('/admin') && 
+        !window.location.hostname.includes('localhost')) {
+        window.analyticsTracker = new AnalyticsTracker();
+    }
 });
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', () => {
+    if (window.analyticsTracker) {
+        window.analyticsTracker.destroy();
+    }
+});
+
+// Export for use in other modules
+window.AnalyticsTracker = AnalyticsTracker;

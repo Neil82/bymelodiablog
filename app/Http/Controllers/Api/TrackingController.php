@@ -19,8 +19,6 @@ class TrackingController extends Controller
                 'user_agent' => 'required|string',
                 'language_code' => 'nullable|string|max:5',
                 'referrer' => 'nullable|string|max:500',
-                'latitude' => 'nullable|numeric|between:-90,90',
-                'longitude' => 'nullable|numeric|between:-180,180',
                 'device_type' => 'nullable|string|max:50',
                 'browser' => 'nullable|string|max:100',
                 'browser_version' => 'nullable|string|max:50',
@@ -35,11 +33,8 @@ class TrackingController extends Controller
             // Get IP address
             $ipAddress = $request->ip();
             
-            // Get geolocation data from IP if coordinates not provided
-            $geoData = null;
-            if (!$validated['latitude'] || !$validated['longitude']) {
-                $geoData = $this->getGeolocationFromIP($ipAddress);
-            }
+            // Always get geolocation data from IP
+            $geoData = $this->getGeolocationFromIP($ipAddress);
 
             // Check if session already exists
             $existingSession = UserSession::where('session_id', $validated['session_id'])->first();
@@ -64,8 +59,8 @@ class TrackingController extends Controller
                 'country_name' => $geoData['country_name'] ?? null,
                 'city' => $geoData['city'] ?? null,
                 'region' => $geoData['region'] ?? null,
-                'latitude' => $validated['latitude'] ?? $geoData['latitude'] ?? null,
-                'longitude' => $validated['longitude'] ?? $geoData['longitude'] ?? null,
+                'latitude' => $geoData['latitude'] ?? null,
+                'longitude' => $geoData['longitude'] ?? null,
                 'device_type' => $validated['device_type'],
                 'browser' => $validated['browser'],
                 'browser_version' => $validated['browser_version'],
@@ -210,7 +205,15 @@ class TrackingController extends Controller
         try {
             // Skip geolocation for local/private IPs
             if ($this->isPrivateIP($ipAddress)) {
-                return null;
+                // Return test data for local development
+                return [
+                    'country_code' => 'PE',
+                    'country_name' => 'Peru',
+                    'city' => 'Lima',
+                    'region' => 'Lima',
+                    'latitude' => -12.0464,
+                    'longitude' => -77.0428
+                ];
             }
 
             // Using ip-api.com (free tier: 1000 requests/month)

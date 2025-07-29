@@ -43,16 +43,7 @@ class AnalyticsTracker {
             started_at: new Date().toISOString()
         };
 
-        // Get geolocation if available
-        if (navigator.geolocation) {
-            try {
-                const position = await this.getCurrentPosition();
-                sessionData.latitude = position.coords.latitude;
-                sessionData.longitude = position.coords.longitude;
-            } catch (error) {
-                console.log('Geolocation not available or denied:', error);
-            }
-        }
+        // Geolocation will be handled server-side using IP address
 
         // Detect device type
         sessionData.device_type = this.detectDeviceType();
@@ -92,15 +83,6 @@ class AnalyticsTracker {
         }
     }
 
-    getCurrentPosition() {
-        return new Promise((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, reject, {
-                timeout: 10000,
-                maximumAge: 300000, // 5 minutes
-                enableHighAccuracy: false
-            });
-        });
-    }
 
     detectDeviceType() {
         const userAgent = navigator.userAgent.toLowerCase();
