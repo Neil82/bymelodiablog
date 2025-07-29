@@ -31,16 +31,16 @@
 <body class="font-sans antialiased bg-gray-50 dark:bg-gray-900">
     <div class="min-h-screen flex">
         <!-- Sidebar -->
-        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 shadow-lg transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0 transition-transform duration-300 ease-in-out">
-            <div class="flex items-center justify-center h-16 bg-blue-600 dark:bg-blue-700">
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 shadow-lg transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0 transition-transform duration-300 ease-in-out flex flex-col">
+            <div class="flex items-center justify-center h-16 bg-blue-600 dark:bg-blue-700 flex-shrink-0">
                 <div class="flex items-center space-x-2">
                     <img src="/images/bymelodia_blanco.png" alt="ByMelodia" class="h-8 w-auto">
                     <span class="text-white font-bold text-lg">Admin Panel</span>
                 </div>
             </div>
 
-            <nav class="mt-8">
-                <div class="px-4 space-y-2">
+            <nav class="flex-1 mt-8 overflow-y-auto">
+                <div class="px-4 space-y-2 pb-4">
                     <!-- Dashboard -->
                     <a href="{{ route('dashboard') }}" class="sidebar-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -151,7 +151,7 @@
             </nav>
 
             <!-- User Profile Section -->
-            <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700">
+            <div class="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex-shrink-0">
                 <div class="flex items-center space-x-3">
                     <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
                         <span class="text-white text-sm font-medium">{{ substr(Auth::user()->name, 0, 1) }}</span>

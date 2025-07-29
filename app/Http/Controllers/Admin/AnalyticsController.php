@@ -158,63 +158,90 @@ class AnalyticsController extends Controller
         $period = $request->get('period', '30');
         $startDate = now()->subDays($period);
 
-        // Top performing posts
-        $topPosts = Post::with(['analytics' => function($query) use ($startDate) {
-                $query->where('date', '>=', $startDate->toDateString());
-            }])
+        // Get real-time analytics data from tracking events
+        $postAnalytics = TrackingEvent::where('event_type', 'page_view')
+            ->whereNotNull('post_id')
+            ->where('event_time', '>=', $startDate)
+            ->selectRaw('
+                post_id,
+                COUNT(DISTINCT user_session_id) as unique_views,
+                COUNT(*) as total_views,
+                AVG(CAST(JSON_UNQUOTE(JSON_EXTRACT(event_data, "$.time_on_page")) AS UNSIGNED)) as avg_time_on_page,
+                SUM(CAST(JSON_UNQUOTE(JSON_EXTRACT(event_data, "$.time_on_page")) AS UNSIGNED)) as total_time_on_page,
+                AVG(CAST(JSON_UNQUOTE(JSON_EXTRACT(event_data, "$.scroll_depth")) AS DECIMAL(5,2))) as scroll_depth_avg
+            ')
+            ->groupBy('post_id')
             ->get()
-            ->map(function($post) {
-                $totalViews = $post->analytics->sum('unique_views');
-                $totalTime = $post->analytics->sum('total_time_on_page');
-                $avgTime = $post->analytics->where('unique_views', '>', 0)->avg('avg_time_on_page');
+            ->keyBy('post_id');
+
+        // Calculate bounce rates
+        $bounceRates = DB::table('tracking_events as te')
+            ->join('user_sessions as us', 'te.user_session_id', '=', 'us.id')
+            ->where('te.event_type', 'page_view')
+            ->whereNotNull('te.post_id')
+            ->where('te.event_time', '>=', $startDate)
+            ->where('us.page_views', '=', 1)
+            ->selectRaw('te.post_id, COUNT(DISTINCT te.user_session_id) as bounced_sessions')
+            ->groupBy('te.post_id')
+            ->pluck('bounced_sessions', 'post_id');
+
+        // Get posts with their real-time metrics
+        $posts = Post::whereIn('id', $postAnalytics->keys())
+            ->get()
+            ->map(function($post) use ($postAnalytics, $bounceRates) {
+                $analytics = $postAnalytics->get($post->id);
+                $bouncedSessions = $bounceRates->get($post->id, 0);
+                $bounceRate = $analytics->unique_views > 0 
+                    ? round(($bouncedSessions / $analytics->unique_views) * 100, 2) 
+                    : 0;
                 
                 return [
                     'post' => $post,
-                    'total_views' => $totalViews,
-                    'total_time' => $totalTime,
-                    'avg_time' => $avgTime,
-                    'bounce_rate' => $post->analytics->avg('bounce_rate') ?? 0
+                    'total_views' => $analytics->total_views,
+                    'unique_views' => $analytics->unique_views,
+                    'avg_time' => round($analytics->avg_time_on_page ?? 0),
+                    'total_time' => round($analytics->total_time_on_page ?? 0),
+                    'bounce_rate' => $bounceRate,
+                    'scroll_depth_avg' => round($analytics->scroll_depth_avg ?? 0, 2)
                 ];
-            })
-            ->where('total_views', '>', 0) // Only show posts with views
-            ->sortByDesc('total_views')
-            ->take(20);
+            });
+
+        // Top performing posts
+        $topPosts = $posts->sortByDesc('unique_views')->take(20);
 
         // Posts with longest engagement
-        $engagementPosts = Post::with(['analytics' => function($query) use ($startDate) {
-                $query->where('date', '>=', $startDate->toDateString());
-            }])
-            ->get()
-            ->map(function($post) {
-                $avgTime = $post->analytics->where('unique_views', '>', 0)->avg('avg_time_on_page');
-                $totalViews = $post->analytics->sum('unique_views');
-                
-                return [
-                    'post' => $post,
-                    'avg_time' => $avgTime,
-                    'total_views' => $totalViews
-                ];
-            })
-            ->where('total_views', '>', 0) // Only posts with views
-            ->sortByDesc('avg_time')
-            ->take(10);
+        $engagementPosts = $posts->sortByDesc('avg_time')->take(10);
 
-        // Content performance metrics
+        // Content performance metrics (real-time)
         $contentMetrics = [
-            'total_posts_viewed' => PostAnalytics::where('date', '>=', $startDate->toDateString())
-                ->distinct('post_id')->count(),
-            'avg_views_per_post' => PostAnalytics::where('date', '>=', $startDate->toDateString())
-                ->avg('unique_views'),
-            'avg_time_per_post' => PostAnalytics::where('date', '>=', $startDate->toDateString())
-                ->where('unique_views', '>', 0)
-                ->avg('avg_time_on_page'),
-            'avg_scroll_depth' => PostAnalytics::where('date', '>=', $startDate->toDateString())
-                ->where('unique_views', '>', 0)
-                ->avg('scroll_depth_avg')
+            'total_posts_viewed' => $postAnalytics->count(),
+            'avg_views_per_post' => $posts->avg('unique_views') ?? 0,
+            'avg_time_per_post' => $posts->avg('avg_time') ?? 0,
+            'avg_scroll_depth' => $posts->avg('scroll_depth_avg') ?? 0
         ];
 
+        // Get recent activity (last 24 hours)
+        $recentActivity = TrackingEvent::where('event_type', 'page_view')
+            ->whereNotNull('post_id')
+            ->where('event_time', '>=', now()->subHours(24))
+            ->with('post')
+            ->latest('event_time')
+            ->limit(50)
+            ->get()
+            ->groupBy('post_id')
+            ->map(function($events, $postId) {
+                return [
+                    'post' => $events->first()->post,
+                    'views' => $events->count(),
+                    'unique_views' => $events->pluck('user_session_id')->unique()->count(),
+                    'last_viewed' => $events->first()->event_time
+                ];
+            })
+            ->sortByDesc('views')
+            ->take(20);
+
         return view('admin.analytics.posts', compact(
-            'topPosts', 'engagementPosts', 'contentMetrics', 'period'
+            'topPosts', 'engagementPosts', 'contentMetrics', 'recentActivity', 'period'
         ));
     }
 

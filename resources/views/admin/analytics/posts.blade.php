@@ -55,7 +55,7 @@
                                             <div class="text-xs text-gray-500 dark:text-gray-400">Views</div>
                                         </div>
                                         <div class="text-center">
-                                            <div class="text-lg font-semibold text-gray-900 dark:text-white">{{ $post['total_views'] }}</div>
+                                            <div class="text-lg font-semibold text-gray-900 dark:text-white">{{ $post['unique_views'] }}</div>
                                             <div class="text-xs text-gray-500 dark:text-gray-400">Unique</div>
                                         </div>
                                         <div class="text-center">
@@ -98,35 +98,37 @@
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
         <div class="p-6 border-b border-gray-200 dark:border-gray-700">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Recent Activity</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">Latest posts and their current performance</p>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Posts viewed in the last 24 hours</p>
         </div>
         <div class="divide-y divide-gray-200 dark:divide-gray-700">
-            @if($engagementPosts->count() > 0)
-                @foreach($engagementPosts as $post)
+            @if(isset($recentActivity) && $recentActivity->count() > 0)
+                @foreach($recentActivity as $activity)
                     <div class="p-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                         <div class="flex items-center justify-between">
                             <div class="flex-1">
                                 <h4 class="text-sm font-medium text-gray-900 dark:text-white">
-                                    {{ $post['post']->title }}
+                                    {{ $activity['post']->title }}
                                 </h4>
                                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                    Published {{ $post['post']->published_at ? $post['post']->published_at->format('M j, Y') : 'Draft' }}
-                                    • {{ $post['post']->category->name ?? 'Uncategorized' }}
+                                    Last viewed {{ $activity['last_viewed']->diffForHumans() }}
+                                    • {{ $activity['post']->category->name ?? 'Uncategorized' }}
                                 </p>
                             </div>
                             <div class="flex items-center space-x-4">
                                 <div class="text-center">
-                                    <div class="text-sm font-semibold text-gray-900 dark:text-white">{{ $post['total_views'] ?? 0 }}</div>
-                                    <div class="text-xs text-gray-500 dark:text-gray-400">Views</div>
+                                    <div class="text-sm font-semibold text-gray-900 dark:text-white">{{ $activity['views'] }}</div>
+                                    <div class="text-xs text-gray-500 dark:text-gray-400">Views (24h)</div>
                                 </div>
                                 <div class="text-center">
-                                    <div class="text-sm font-semibold text-gray-900 dark:text-white">{{ $post['post']->comments_count ?? 0 }}</div>
-                                    <div class="text-xs text-gray-500 dark:text-gray-400">Comments</div>
+                                    <div class="text-sm font-semibold text-gray-900 dark:text-white">{{ $activity['unique_views'] }}</div>
+                                    <div class="text-xs text-gray-500 dark:text-gray-400">Unique (24h)</div>
                                 </div>
                                 <div class="flex items-center space-x-2">
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $post['post']->status === 'published' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
-                                        {{ ucfirst($post['post']->status) }}
-                                    </span>
+                                    <a href="{{ route('blog.show', $activity['post']->slug) }}" target="_blank" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                        </svg>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -139,8 +141,8 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                         </svg>
                     </div>
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">No Engagement Data</h3>
-                    <p class="text-gray-600 dark:text-gray-400 mb-4">No engagement data available for this period.</p>
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">No Recent Activity</h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-4">No posts have been viewed in the last 24 hours.</p>
                     <a href="{{ route('admin.posts.create') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
                         Create New Post
                     </a>
