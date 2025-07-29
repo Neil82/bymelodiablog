@@ -90,11 +90,6 @@
                                 {{ __('ui.nav.logout') }}
                             </button>
                         </form>
-                    @else
-                        <span class="text-gray-300 dark:text-gray-600">|</span>
-                        <a href="{{ route('login') }}" class="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">
-                            Login
-                        </a>
                     @endauth
                 </nav>
             </div>
