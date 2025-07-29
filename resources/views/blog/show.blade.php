@@ -66,18 +66,6 @@
                     {{ __('ui.nav.about') }}
                 </a>
                 
-                @auth
-                    <span class="text-gray-300 dark:text-gray-600">|</span>
-                    <a href="{{ route('admin.posts.index') }}" class="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">
-                        {{ __('ui.nav.admin') }}
-                    </a>
-                    <form method="POST" action="{{ route('logout') }}" class="inline">
-                        @csrf
-                        <button type="submit" class="text-gray-900 dark:text-white hover:text-red-600 dark:hover:text-red-400 transition-colors font-medium">
-                            {{ __('ui.nav.logout') }}
-                        </button>
-                    </form>
-                @endauth
             </nav>
         </div>
     </header>
