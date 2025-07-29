@@ -350,23 +350,7 @@
         </main>
 
         <!-- Footer -->
-        <footer class="bg-gray-50 dark:bg-gray-800 mt-16">
-            <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-                <div class="text-center">
-                    <p class="text-gray-500 dark:text-gray-400 text-sm">
-                        © {{ date('Y') }} ByMelodia. {{ __('ui.footer.all_rights_reserved') }}.
-                    </p>
-                    <div class="mt-4 flex justify-center space-x-6">
-                        <a href="{{ route('privacy.policy') }}" class="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-sm">
-                            {{ __('ui.footer.privacy_policy') }}
-                        </a>
-                        <a href="{{ route('terms.service') }}" class="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-sm">
-                            {{ __('ui.footer.terms_of_service') }}
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </footer>
+        <x-footer />
 
         <!-- GDPR Consent -->
         <x-gdpr-consent />

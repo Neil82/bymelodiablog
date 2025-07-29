@@ -18,6 +18,7 @@ return [
         'site_settings' => 'Site Settings',
         'languages' => 'Languages',
         'users' => 'Users',
+        'newsletter' => 'Newsletter',
         'logout' => 'Logout',
     ],
 

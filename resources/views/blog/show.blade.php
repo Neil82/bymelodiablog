@@ -13,6 +13,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="post-id" content="{{ $post->id }}">
     <title>{{ $post->title }} - ByMelodia</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/logo_bymelodia_blanco.png">
+    <link rel="apple-touch-icon" href="/images/logo_bymelodia_blanco.png">
     <meta name="description" content="{{ $post->excerpt ?? Str::limit(strip_tags($post->content), 160) }}">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
@@ -290,6 +293,9 @@
             </section>
         @endif
     </main>
+
+    <!-- Footer -->
+    <x-footer />
 
     <!-- Analytics Tracking -->
     <script src="{{ asset('js/analytics-tracker.js') }}"></script>

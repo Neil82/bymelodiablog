@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\LanguageController as AdminLanguageController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\NewsletterController as AdminNewsletterController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\RobotsController;
 use App\Http\Controllers\ProfileController;
@@ -32,6 +33,11 @@ Route::get('/terms-of-service', [BlogController::class, 'termsOfService'])->name
 
 // Language routes
 Route::get('/language/switch/{code}', [LanguageController::class, 'switch'])->name('language.switch');
+
+// Newsletter routes
+Route::post('/newsletter/subscribe', [App\Http\Controllers\NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
+Route::get('/newsletter/confirm/{token}', [App\Http\Controllers\NewsletterController::class, 'confirm'])->name('newsletter.confirm');
+Route::get('/newsletter/unsubscribe/{token}', [App\Http\Controllers\NewsletterController::class, 'unsubscribe'])->name('newsletter.unsubscribe');
 
 // API routes (public)
 Route::prefix('api')->group(function () {
@@ -130,6 +136,11 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
     ]);
     Route::get('change-password', [AdminUserController::class, 'changePassword'])->name('admin.users.change-password');
     Route::post('change-password', [AdminUserController::class, 'updatePassword'])->name('admin.users.update-password');
+    
+    // Newsletter management routes
+    Route::get('newsletter', [AdminNewsletterController::class, 'index'])->name('admin.newsletter.index');
+    Route::get('newsletter/export', [AdminNewsletterController::class, 'export'])->name('admin.newsletter.export');
+    Route::delete('newsletter/{subscriber}', [AdminNewsletterController::class, 'destroy'])->name('admin.newsletter.destroy');
 });
 
 // Profile management routes

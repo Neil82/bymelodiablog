@@ -18,6 +18,7 @@ return [
         'site_settings' => 'Configuración del Sitio',
         'languages' => 'Idiomas',
         'users' => 'Usuarios',
+        'newsletter' => 'Newsletter',
         'logout' => 'Cerrar Sesión',
     ],
 
