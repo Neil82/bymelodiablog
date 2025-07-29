@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\FeaturedPostController;
 use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\LanguageController as AdminLanguageController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\RobotsController;
 use App\Http\Controllers\ProfileController;
@@ -116,6 +117,19 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
         'destroy' => 'admin.languages.destroy'
     ]);
     Route::patch('languages/{language}/toggle-status', [AdminLanguageController::class, 'toggleStatus'])->name('admin.languages.toggle-status');
+    
+    // User management routes
+    Route::resource('users', AdminUserController::class)->names([
+        'index' => 'admin.users.index',
+        'create' => 'admin.users.create',
+        'store' => 'admin.users.store',
+        'show' => 'admin.users.show',
+        'edit' => 'admin.users.edit',
+        'update' => 'admin.users.update',
+        'destroy' => 'admin.users.destroy'
+    ]);
+    Route::get('change-password', [AdminUserController::class, 'changePassword'])->name('admin.users.change-password');
+    Route::post('change-password', [AdminUserController::class, 'updatePassword'])->name('admin.users.update-password');
 });
 
 // Profile management routes
