@@ -41,6 +41,11 @@ class PostController extends Controller
 
         $validated['user_id'] = auth()->id();
         $validated['comments_enabled'] = $request->has('comments_enabled');
+        
+        // Set published_at when status is published
+        if ($validated['status'] === 'published' && !isset($validated['published_at'])) {
+            $validated['published_at'] = now();
+        }
 
         // Handle image upload with WebP conversion
         if ($request->hasFile('featured_image')) {
@@ -73,6 +78,13 @@ class PostController extends Controller
         ]);
 
         $validated['comments_enabled'] = $request->has('comments_enabled');
+        
+        // Set published_at when changing status to published
+        if ($validated['status'] === 'published' && $post->status !== 'published') {
+            $validated['published_at'] = now();
+        } elseif ($validated['status'] !== 'published') {
+            $validated['published_at'] = null;
+        }
 
         // Handle image upload
         if ($request->hasFile('featured_image')) {
