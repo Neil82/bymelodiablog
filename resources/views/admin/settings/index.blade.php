@@ -7,12 +7,51 @@
         
         <!-- Page Header -->
         <div class="mb-8">
-            <h2 class="text-2xl font-bold leading-7 text-gray-900 dark:text-white sm:text-3xl">
-                {{ __('admin.settings.title') }}
-            </h2>
-            <p class="mt-2 text-gray-600 dark:text-gray-400">
-                {{ __('admin.settings.description') }}
-            </p>
+            <div class="flex justify-between items-start">
+                <div>
+                    <h2 class="text-2xl font-bold leading-7 text-gray-900 dark:text-white sm:text-3xl">
+                        {{ __('admin.settings.title') }}
+                    </h2>
+                    <p class="mt-2 text-gray-600 dark:text-gray-400">
+                        {{ __('admin.settings.description') }}
+                    </p>
+                </div>
+                
+                <!-- Language Selector -->
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm text-gray-600 dark:text-gray-400">{{ __('admin.posts.language') }}:</span>
+                    @foreach($activeLanguages as $language)
+                        @php
+                            $hasTranslation = $language->code === 'es';
+                            // Check if any setting has translation for this language
+                            if ($language->code !== 'es') {
+                                foreach($settings as $group) {
+                                    foreach($group as $setting) {
+                                        if (in_array($setting->type, ['text', 'textarea'])) {
+                                            $translation = App\Models\SiteSettingTranslation::where('site_setting_id', $setting->id)
+                                                ->where('language_id', $language->id)
+                                                ->exists();
+                                            if ($translation) {
+                                                $hasTranslation = true;
+                                                break 2;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            $isActive = $currentLanguage === $language->code;
+                        @endphp
+                        <a href="{{ route('admin.settings.index', ['lang' => $language->code]) }}"
+                           class="px-3 py-1 text-sm rounded-full transition-colors {{ $isActive 
+                               ? 'bg-blue-600 text-white' 
+                               : ($hasTranslation 
+                                   ? 'bg-green-100 text-green-800 hover:bg-green-200' 
+                                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200') }}">
+                            {{ strtoupper($language->code) }}
+                        </a>
+                    @endforeach
+                </div>
+            </div>
         </div>
 
         @if(session('success'))
@@ -33,6 +72,7 @@
 
         <form method="POST" action="{{ route('admin.settings.update') }}" enctype="multipart/form-data">
             @csrf
+            <input type="hidden" name="language" value="{{ $currentLanguage }}">
             
             <div class="space-y-8">
                 @foreach($groups as $groupKey => $groupTitle)
@@ -49,6 +89,11 @@
                                     <div>
                                         <label for="{{ $key }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                             {{ $setting->label }}
+                                            @if($currentLanguage !== 'es' && in_array($setting->type, ['text', 'textarea']))
+                                                <span class="ml-2 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">
+                                                    {{ strtoupper($currentLanguage) }} translation
+                                                </span>
+                                            @endif
                                             @if($setting->description)
                                                 <span class="block text-xs text-gray-500 dark:text-gray-400 font-normal">
                                                     {{ $setting->description }}
@@ -57,13 +102,44 @@
                                         </label>
                                         
                                         @if($setting->type === 'text')
-                                            <input type="text" name="settings[{{ $key }}]" id="{{ $key }}" 
-                                                   value="{{ old("settings.{$key}", $setting->value) }}"
-                                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                            @php
+                                                $displayValue = old("settings.{$key}");
+                                                if ($displayValue === null) {
+                                                    $displayValue = $currentLanguage !== 'es' && isset($setting->translated_value) 
+                                                        ? $setting->translated_value 
+                                                        : $setting->value;
+                                                }
+                                                $displayValue = $displayValue ?? '';
+                                            @endphp
+                                            @if($currentLanguage !== 'es' && in_array($setting->type, ['text', 'textarea']))
+                                                <input type="text" name="settings[{{ $key }}]" id="{{ $key }}" 
+                                                       value="{{ $displayValue }}"
+                                                       placeholder="{{ $setting->value ? 'Original: ' . Str::limit($setting->value, 50) : '' }}"
+                                                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                            @else
+                                                <input type="text" name="settings[{{ $key }}]" id="{{ $key }}" 
+                                                       value="{{ $displayValue }}"
+                                                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                            @endif
                                         
                                         @elseif($setting->type === 'textarea')
-                                            <textarea name="settings[{{ $key }}]" id="{{ $key }}" rows="4"
-                                                      class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">{{ old("settings.{$key}", $setting->value) }}</textarea>
+                                            @php
+                                                $displayValue = old("settings.{$key}");
+                                                if ($displayValue === null) {
+                                                    $displayValue = $currentLanguage !== 'es' && isset($setting->translated_value) 
+                                                        ? $setting->translated_value 
+                                                        : $setting->value;
+                                                }
+                                                $displayValue = $displayValue ?? '';
+                                            @endphp
+                                            @if($currentLanguage !== 'es' && in_array($setting->type, ['text', 'textarea']))
+                                                <textarea name="settings[{{ $key }}]" id="{{ $key }}" rows="4"
+                                                          placeholder="{{ $setting->value ? 'Original: ' . Str::limit($setting->value, 100) : '' }}"
+                                                          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">{{ $displayValue }}</textarea>
+                                            @else
+                                                <textarea name="settings[{{ $key }}]" id="{{ $key }}" rows="4"
+                                                          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">{{ $displayValue }}</textarea>
+                                            @endif
                                         
                                         @elseif($setting->type === 'boolean')
                                             <div class="flex items-center">

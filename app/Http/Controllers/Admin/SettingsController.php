@@ -12,7 +12,7 @@ use Intervention\Image\Facades\Image;
 
 class SettingsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $groups = [
             'banner' => __('admin.settings.banner_section'),
@@ -22,22 +22,44 @@ class SettingsController extends Controller
             'legal' => __('admin.settings.legal_section') ?? 'Legal (Privacy & Terms)'
         ];
 
+        // Get current language from request or default to spanish
+        $currentLanguage = $request->get('lang', 'es');
+        $currentLang = Language::where('code', $currentLanguage)->first();
+        $activeLanguages = Language::where('is_active', true)->get();
+
         $settings = [];
         foreach ($groups as $group => $title) {
-            $settings[$group] = SiteSetting::where('group', $group)->get()->keyBy('key');
+            $baseSettings = SiteSetting::where('group', $group)->get()->keyBy('key');
+            
+            // For each setting, get the translation if not in main language
+            foreach ($baseSettings as $key => $setting) {
+                if ($currentLanguage !== 'es' && in_array($setting->type, ['text', 'textarea'])) {
+                    // Get translation for this setting
+                    $translation = SiteSettingTranslation::where('site_setting_id', $setting->id)
+                        ->where('language_id', $currentLang->id ?? null)
+                        ->first();
+                    
+                    if ($translation) {
+                        $setting->translated_value = $translation->value;
+                    }
+                }
+            }
+            
+            $settings[$group] = $baseSettings;
         }
 
-        $activeLanguages = Language::where('is_active', true)->get();
-        $currentLang = app()->getLocale();
-
-        return view('admin.settings.index', compact('groups', 'settings', 'activeLanguages', 'currentLang'));
+        return view('admin.settings.index', compact('groups', 'settings', 'activeLanguages', 'currentLang', 'currentLanguage'));
     }
 
     public function update(Request $request)
     {
         $request->validate([
             'settings' => 'required|array',
+            'language' => 'required|exists:languages,code'
         ]);
+
+        $currentLanguage = $request->language;
+        $language = Language::where('code', $currentLanguage)->first();
 
         foreach ($request->settings as $key => $value) {
             $setting = SiteSetting::where('key', $key)->first();
@@ -46,7 +68,7 @@ class SettingsController extends Controller
                 continue;
             }
 
-            // Handle file uploads for image settings
+            // Handle file uploads for image settings (always update main setting)
             if ($setting->type === 'image' && $request->hasFile("files.{$key}")) {
                 $file = $request->file("files.{$key}");
                 
@@ -59,17 +81,45 @@ class SettingsController extends Controller
                 $filename = $this->processImage($file, $key);
                 SiteSetting::set($key, $filename);
             } else {
-                // Handle regular text/textarea/boolean settings
-                $processedValue = $setting->type === 'boolean' ? ($value ? 'true' : 'false') : $value;
-                SiteSetting::set($key, $processedValue);
+                // Handle text/textarea settings with translations
+                if ($currentLanguage === 'es') {
+                    // Update main setting for Spanish
+                    $processedValue = $setting->type === 'boolean' ? ($value ? 'true' : 'false') : $value;
+                    SiteSetting::set($key, $processedValue);
+                } else {
+                    // Handle translations for other languages (only text/textarea)
+                    if (in_array($setting->type, ['text', 'textarea'])) {
+                        // Only create translation if value is not empty
+                        if (!empty($value)) {
+                            SiteSettingTranslation::updateOrCreate(
+                                [
+                                    'site_setting_id' => $setting->id,
+                                    'language_id' => $language->id
+                                ],
+                                [
+                                    'value' => $value
+                                ]
+                            );
+                        } else {
+                            // If value is empty, delete existing translation
+                            SiteSettingTranslation::where('site_setting_id', $setting->id)
+                                ->where('language_id', $language->id)
+                                ->delete();
+                        }
+                    } else {
+                        // For non-translatable settings (boolean, image), update main setting
+                        $processedValue = $setting->type === 'boolean' ? ($value ? 'true' : 'false') : $value;
+                        SiteSetting::set($key, $processedValue);
+                    }
+                }
             }
         }
 
         // Clear all settings cache
         SiteSetting::clearCache();
 
-        return redirect()->route('admin.settings.index')
-                        ->with('success', 'Configuración actualizada exitosamente.');
+        $redirectUrl = route('admin.settings.index', ['lang' => $currentLanguage]);
+        return redirect($redirectUrl)->with('success', 'Configuración actualizada exitosamente.');
     }
 
     private function processImage($file, $key)
