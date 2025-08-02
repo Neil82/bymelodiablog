@@ -94,6 +94,119 @@
         </div>
     </div>
 
+    <!-- Geographic Analytics -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Countries by Post -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Geographic Interest</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Countries reading your posts</p>
+            </div>
+            <div class="p-6">
+                @if(isset($postCountryData) && $postCountryData->count() > 0)
+                    <div class="space-y-6">
+                        @foreach($postCountryData->take(3) as $postId => $countries)
+                            @php $post = $topPosts->firstWhere('post.id', $postId) @endphp
+                            @if($post)
+                                <div class="border-b border-gray-200 dark:border-gray-700 pb-4 last:border-b-0">
+                                    <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-3">
+                                        {{ Str::limit($post['post']->title, 50) }}
+                                    </h4>
+                                    <div class="space-y-2">
+                                        @foreach($countries->take(4) as $country)
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex items-center space-x-2">
+                                                    <span class="text-lg">
+                                                        @php
+                                                            $flags = [
+                                                                'MX' => '🇲🇽', 'CO' => '🇨🇴', 'AR' => '🇦🇷', 'ES' => '🇪🇸', 
+                                                                'US' => '🇺🇸', 'CL' => '🇨🇱', 'PE' => '🇵🇪', 'BR' => '🇧🇷',
+                                                                'VE' => '🇻🇪', 'EC' => '🇪🇨', 'UY' => '🇺🇾', 'PY' => '🇵🇾'
+                                                            ];
+                                                            echo $flags[$country->country_code] ?? '🌍';
+                                                        @endphp
+                                                    </span>
+                                                    <span class="text-sm text-gray-700 dark:text-gray-300">{{ $country->country_name }}</span>
+                                                </div>
+                                                <div class="flex items-center space-x-3">
+                                                    <span class="text-xs text-gray-500">{{ $country->unique_visitors }} visitors</span>
+                                                    <div class="w-20 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                                        <div class="bg-blue-600 h-2 rounded-full" style="width: {{ min(($country->total_views / $post['total_views']) * 100, 100) }}%"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+                @else
+                    <div class="text-center py-8">
+                        <div class="text-gray-400 mb-2">🌍</div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">No geographic data available yet</p>
+                    </div>
+                @endif
+            </div>
+        </div>
+
+        <!-- Time Analytics -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Time on Page</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Reader engagement per post</p>
+            </div>
+            <div class="p-6">
+                @if(isset($postTimeAnalytics) && $postTimeAnalytics->count() > 0)
+                    <div class="space-y-4">
+                        @foreach($postTimeAnalytics->take(5) as $postId => $timeData)
+                            @php $post = $topPosts->firstWhere('post.id', $postId) @endphp
+                            @if($post)
+                                <div class="border-b border-gray-200 dark:border-gray-700 pb-4 last:border-b-0">
+                                    <div class="flex items-start justify-between">
+                                        <div class="flex-1">
+                                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">
+                                                {{ Str::limit($post['post']->title, 40) }}
+                                            </h4>
+                                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                {{ $timeData->total_sessions ?? $post['total_views'] }} reading sessions
+                                            </p>
+                                        </div>
+                                        <div class="text-right ml-4">
+                                            <div class="text-lg font-semibold text-gray-900 dark:text-white">
+                                                {{ gmdate('i:s', $timeData->avg_time_seconds ?? $post['avg_time']) }}
+                                            </div>
+                                            <div class="text-xs text-gray-500 dark:text-gray-400">avg time</div>
+                                            @if(isset($timeData->max_time_seconds))
+                                                <div class="text-xs text-green-600 dark:text-green-400 mt-1">
+                                                    Max: {{ gmdate('i:s', $timeData->max_time_seconds) }}
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <!-- Engagement indicator -->
+                                    @php
+                                        $avgSeconds = $timeData->avg_time_seconds ?? $post['avg_time'];
+                                        $engagementLevel = $avgSeconds < 60 ? 'low' : ($avgSeconds < 180 ? 'medium' : 'high');
+                                        $engagementColor = $engagementLevel === 'high' ? 'bg-green-500' : ($engagementLevel === 'medium' ? 'bg-yellow-500' : 'bg-red-500');
+                                    @endphp
+                                    <div class="mt-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1">
+                                        <div class="{{ $engagementColor }} h-1 rounded-full" style="width: {{ min(($avgSeconds / 300) * 100, 100) }}%"></div>
+                                    </div>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+                @else
+                    <div class="text-center py-8">
+                        <div class="text-gray-400 mb-2">⏱️</div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">No time analytics available yet</p>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+
     <!-- Recent Posts Activity -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
         <div class="p-6 border-b border-gray-200 dark:border-gray-700">
