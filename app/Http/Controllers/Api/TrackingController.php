@@ -8,6 +8,7 @@ use App\Models\TrackingEvent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class TrackingController extends Controller
 {
@@ -71,8 +72,8 @@ class TrackingController extends Controller
                 'utm_medium' => $validated['utm_medium'],
                 'utm_campaign' => $validated['utm_campaign'],
                 'language_code' => $validated['language_code'],
-                'started_at' => $validated['started_at'],
-                'last_activity_at' => now(),
+                'started_at' => Carbon::parse($validated['started_at'])->setTimezone('America/Lima'),
+                'last_activity_at' => now()->setTimezone('America/Lima'),
                 'is_bot' => $isBot
             ]);
 
@@ -141,7 +142,7 @@ class TrackingController extends Controller
                         'scroll_depth' => $eventData['scroll_depth'] ?? null,
                         'element_clicked' => $eventData['element_clicked'] ?? null,
                         'event_data' => $eventData['event_data'] ?? null,
-                        'event_time' => $eventData['event_time']
+                        'event_time' => Carbon::parse($eventData['event_time'])->setTimezone('America/Lima')
                     ]);
 
                     $processedEvents++;
