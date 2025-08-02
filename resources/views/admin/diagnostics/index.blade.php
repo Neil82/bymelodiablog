@@ -11,7 +11,7 @@
             <p class="text-gray-600 dark:text-gray-400">Complete overview of production database</p>
         </div>
         <div class="text-sm text-gray-500 dark:text-gray-400">
-            Generated: {{ now()->format('Y-m-d H:i:s T') }}
+            Generated: {{ now()->setTimezone('America/Lima')->format('Y-m-d H:i:s T') }}
         </div>
     </div>
 

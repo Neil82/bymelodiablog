@@ -47,9 +47,9 @@ class DiagnosticController extends Controller
                     'id' => $post->id,
                     'title' => $post->title,
                     'views' => $post->views,
-                    'published_at' => $post->published_at?->format('Y-m-d H:i:s'),
-                    'created_at' => $post->created_at->format('Y-m-d H:i:s'),
-                    'updated_at' => $post->updated_at->format('Y-m-d H:i:s'),
+                    'published_at' => $post->published_at?->setTimezone('America/Lima')->format('Y-m-d H:i:s T'),
+                    'created_at' => $post->created_at->setTimezone('America/Lima')->format('Y-m-d H:i:s T'),
+                    'updated_at' => $post->updated_at->setTimezone('America/Lima')->format('Y-m-d H:i:s T'),
                 ];
             }),
             'posts_by_views' => Post::selectRaw('
@@ -90,8 +90,8 @@ class DiagnosticController extends Controller
                     'browser' => $session->browser,
                     'page_views' => $session->page_views,
                     'total_duration' => $session->total_duration,
-                    'started_at' => $session->started_at?->format('Y-m-d H:i:s'),
-                    'last_activity' => $session->last_activity?->format('Y-m-d H:i:s'),
+                    'started_at' => $session->started_at?->setTimezone('America/Lima')->format('Y-m-d H:i:s T'),
+                    'last_activity' => $session->last_activity?->setTimezone('America/Lima')->format('Y-m-d H:i:s T'),
                 ];
             }),
             'sessions_by_device' => UserSession::selectRaw('device_type, COUNT(*) as count')
@@ -128,8 +128,8 @@ class DiagnosticController extends Controller
                     'url' => $event->url,
                     'page_title' => $event->page_title,
                     'time_on_page' => $timeOnPage,
-                    'event_time' => $event->event_time?->format('Y-m-d H:i:s'),
-                    'created_at' => $event->created_at->format('Y-m-d H:i:s'),
+                    'event_time' => $event->event_time?->setTimezone('America/Lima')->format('Y-m-d H:i:s T'),
+                    'created_at' => $event->created_at->setTimezone('America/Lima')->format('Y-m-d H:i:s T'),
                 ];
             }),
         ];
@@ -195,7 +195,7 @@ class DiagnosticController extends Controller
             'php_version' => PHP_VERSION,
             'laravel_version' => app()->version(),
             'database_connection' => config('database.default'),
-            'current_time' => now()->format('Y-m-d H:i:s T'),
+            'current_time' => now()->setTimezone('America/Lima')->format('Y-m-d H:i:s T'),
             'timezone' => config('app.timezone'),
             'environment' => app()->environment(),
         ];
