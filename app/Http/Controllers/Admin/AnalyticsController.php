@@ -163,20 +163,16 @@ class AnalyticsController extends Controller
             ->orderByDesc('views')
             ->get()
             ->map(function($post) {
-                // Default values based on total views
-                $uniqueViews = $post->views; // Default to total views (conservative)
-                $estimatedAvgTime = 60; // Default 1 minute
-                $estimatedBounceRate = 50; // Default 50%
-                $estimatedScrollDepth = 70; // Default 70%
-                
+                // Start with NO DATA defaults - we'll only show real data
                 return [
                     'post' => $post,
-                    'total_views' => $post->views, // Use real view count
-                    'unique_views' => $uniqueViews,
-                    'avg_time' => $estimatedAvgTime,
-                    'total_time' => $post->views * $estimatedAvgTime,
-                    'bounce_rate' => $estimatedBounceRate,
-                    'scroll_depth_avg' => $estimatedScrollDepth
+                    'total_views' => $post->views, // Historical view count
+                    'unique_views' => 0, // Will be updated with real data
+                    'avg_time' => 0, // Will be updated with real data
+                    'total_time' => 0,
+                    'bounce_rate' => 0,
+                    'scroll_depth_avg' => 0,
+                    'has_tracking_data' => false // Flag to indicate if we have real tracking
                 ];
             });
 
@@ -193,13 +189,44 @@ class AnalyticsController extends Controller
             ->get()
             ->keyBy('post_id');
 
+        // Get time analytics for posts
+        $timeAnalytics = TrackingEvent::where('event_type', 'page_view')
+            ->whereNotNull('post_id')
+            ->whereNotNull('time_on_page')
+            ->where('time_on_page', '>', 0)
+            ->selectRaw('
+                post_id,
+                AVG(time_on_page) as avg_time,
+                MAX(time_on_page) as max_time,
+                COUNT(*) as sessions_with_time
+            ')
+            ->groupBy('post_id')
+            ->get()
+            ->keyBy('post_id');
+
         // Update posts with real tracking data if available
-        $posts = $posts->map(function($item) use ($trackingData) {
-            if ($trackingData->has($item['post']->id)) {
-                $realData = $trackingData->get($item['post']->id);
+        $posts = $posts->map(function($item) use ($trackingData, $timeAnalytics) {
+            $postId = $item['post']->id;
+            
+            // Update with real tracking data if available
+            if ($trackingData->has($postId)) {
+                $realData = $trackingData->get($postId);
                 $item['unique_views'] = $realData->unique_views;
-                $item['total_views'] = max($item['total_views'], $realData->total_views);
+                $item['has_tracking_data'] = true;
+                
+                // If tracking shows more views than the counter, use tracking data
+                if ($realData->total_views > $item['total_views']) {
+                    $item['total_views'] = $realData->total_views;
+                }
             }
+            
+            // Update with time analytics if available
+            if ($timeAnalytics->has($postId)) {
+                $timeData = $timeAnalytics->get($postId);
+                $item['avg_time'] = round($timeData->avg_time);
+                $item['total_time'] = $item['total_views'] * $item['avg_time'];
+            }
+            
             return $item;
         });
 
