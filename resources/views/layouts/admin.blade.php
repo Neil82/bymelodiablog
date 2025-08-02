@@ -74,6 +74,9 @@
                             <a href="{{ route('admin.analytics.realtime') }}" class="sidebar-sublink {{ request()->routeIs('admin.analytics.realtime') ? 'active' : '' }}">
                                 {{ __('admin.nav.realtime') }}
                             </a>
+                            <a href="{{ route('admin.analytics.diagnostics') }}" class="sidebar-sublink {{ request()->routeIs('admin.analytics.diagnostics') ? 'active' : '' }}">
+                                Database Diagnostics
+                            </a>
                         </div>
                     </div>
 

@@ -114,6 +114,7 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
         Route::get('visitors', [AnalyticsController::class, 'visitors'])->name('admin.analytics.visitors');
         Route::get('posts', [AnalyticsController::class, 'posts'])->name('admin.analytics.posts');
         Route::get('realtime', [AnalyticsController::class, 'realtime'])->name('admin.analytics.realtime');
+        Route::get('diagnostics', [Admin\DiagnosticController::class, 'index'])->name('admin.analytics.diagnostics');
         Route::get('chart-data', [AnalyticsController::class, 'getChartData'])->name('admin.analytics.chart-data');
     });
     
