@@ -27,6 +27,11 @@ Route::get('/blog/categoria/{category:slug}', [BlogController::class, 'category'
 Route::get('/blog/{post:slug}', [BlogController::class, 'show'])->name('blog.show');
 Route::post('/blog/{post:slug}/comments', [BlogController::class, 'storeComment'])->name('blog.comments.store');
 
+// About page
+Route::get('/acerca-de', function () {
+    return view('about');
+})->name('about');
+
 // Legal pages
 Route::get('/privacy-policy', [BlogController::class, 'privacyPolicy'])->name('privacy.policy');
 Route::get('/terms-of-service', [BlogController::class, 'termsOfService'])->name('terms.service');

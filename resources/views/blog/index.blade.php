@@ -10,7 +10,15 @@
     </script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ __('ui.nav.blog') }} - ByMelodia</title>
+    
+    <!-- SEO Meta Tags -->
+    <x-seo-meta 
+        :title="__('ui.nav.blog')"
+        :description="'Descubre los últimos artículos sobre cultura juvenil, música y tendencias en el blog de ByMelodia.'"
+        :url="route('blog.index')"
+        type="website"
+    />
+    
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="/images/logo_bymelodia_blanco.png">
     <link rel="apple-touch-icon" href="/images/logo_bymelodia_blanco.png">
@@ -39,14 +47,14 @@
                 </button>
             </div>
             
-            <!-- Centered Logo -->
-            <div class="text-center mb-8">
+            <!-- Centered Logo - Large -->
+            <div class="text-center mb-12">
                 <a href="{{ route('home') }}">
                     <img 
                         id="logo" 
                         src="/images/bymelodia_negro.png" 
                         alt="ByMelodia" 
-                        class="h-12 w-auto mx-auto transition-all duration-300 hover:scale-105"
+                        class="h-24 md:h-32 lg:h-40 w-auto mx-auto transition-all duration-300 hover:scale-105"
                     >
                 </a>
             </div>
@@ -59,7 +67,7 @@
                 <a href="{{ route('blog.index') }}" class="text-azul-intenso dark:text-azul-claro font-semibold text-lg border-b-2 border-azul-intenso dark:border-azul-claro pb-1">
                     {{ __('ui.nav.blog') }}
                 </a>
-                <a href="#" class="text-gray-700 dark:text-gray-300 hover:text-azul-intenso dark:hover:text-azul-claro transition-colors font-medium text-lg">
+                <a href="{{ route('about') }}" class="text-gray-700 dark:text-gray-300 hover:text-azul-intenso dark:hover:text-azul-claro transition-colors font-medium text-lg">
                     {{ __('ui.nav.about') }}
                 </a>
             </nav>
@@ -67,21 +75,54 @@
     </header>
 
     <!-- Page Header -->
-    <div class="bg-white dark:bg-gray-900 py-16">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">{{ __('ui.blog.title') }}</h1>
-            <p class="text-xl text-gray-600 dark:text-gray-400">{{ __('ui.blog.subtitle') }}</p>
+    <div class="relative bg-gradient-to-br from-azul-claro/20 via-white to-rosado-pastel/15 dark:from-azul-intenso/20 dark:via-gray-900 dark:to-azul-claro/10 py-16 overflow-hidden">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-20">
+            <svg class="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <pattern id="blog-grid" width="60" height="60" patternUnits="userSpaceOnUse">
+                        <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#a7b9e9" stroke-width="1" opacity="0.3"/>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#blog-grid)" />
+            </svg>
+        </div>
+        
+        <!-- Floating elements -->
+        <div class="absolute inset-0">
+            <div class="absolute top-10 left-10 w-24 h-24 bg-verde-lima/40 rounded-full blur-2xl animate-pulse"></div>
+            <div class="absolute bottom-10 right-20 w-32 h-32 bg-rosado-pastel/40 rounded-full blur-2xl animate-pulse" style="animation-delay: 1s;"></div>
+        </div>
+        
+        <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <!-- Blog Badge -->
+            <div class="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-azul-claro/20 to-verde-lima/20 border-2 border-azul-claro/30 backdrop-blur-md text-sm font-medium mb-8 shadow-xl">
+                <span class="w-3 h-3 bg-gradient-to-r from-azul-intenso to-azul-claro rounded-full mr-3 animate-pulse shadow-md"></span>
+                <span class="text-azul-intenso dark:text-azul-claro font-semibold">Blog</span>
+            </div>
+            
+            <!-- Description Card -->
+            <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-3xl p-8 shadow-xl border border-azul-claro/30">
+                <p class="text-xl md:text-2xl text-gray-700 dark:text-gray-200 font-medium leading-relaxed">
+                    {{ __('ui.blog.subtitle') }}
+                </p>
+            </div>
         </div>
     </div>
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-gradient-to-b from-gray-50 via-white to-azul-claro/5 dark:from-gray-800 dark:via-gray-900 dark:to-azul-intenso/10 min-h-screen relative">
+        <!-- Background decoration -->
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-20 right-1/4 w-40 h-40 bg-rosado-pastel rounded-full blur-3xl"></div>
+            <div class="absolute bottom-20 left-1/4 w-60 h-60 bg-verde-lima rounded-full blur-3xl"></div>
+        </div>
         <div class="flex flex-col lg:flex-row gap-8">
             
             <!-- Posts Grid -->
-            <div class="flex-1">
+            <div class="relative flex-1">
                 @if($posts->count() > 0)
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                         @foreach($posts as $post)
                             <article class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-200 dark:border-gray-700">
                                 @if($post->featured_image)

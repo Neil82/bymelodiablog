@@ -80,7 +80,7 @@
                     <a href="{{ route('blog.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-azul-intenso dark:hover:text-azul-claro transition-colors font-medium text-lg">
                         {{ __('ui.nav.blog') }}
                     </a>
-                    <a href="#" class="text-gray-700 dark:text-gray-300 hover:text-azul-intenso dark:hover:text-azul-claro transition-colors font-medium text-lg">
+                    <a href="{{ route('about') }}" class="text-gray-700 dark:text-gray-300 hover:text-azul-intenso dark:hover:text-azul-claro transition-colors font-medium text-lg">
                         {{ __('ui.nav.about') }}
                     </a>
                 </nav>

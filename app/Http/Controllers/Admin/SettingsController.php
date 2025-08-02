@@ -17,6 +17,7 @@ class SettingsController extends Controller
         $groups = [
             'banner' => __('admin.settings.banner_section'),
             'home' => __('admin.settings.home_section'),
+            'about' => __('admin.settings.about_section'),
             'seo' => __('admin.settings.seo_section'),
             'ads' => __('admin.settings.adsense_section'),
             'legal' => __('admin.settings.legal_section') ?? 'Legal (Privacy & Terms)'
@@ -149,6 +150,8 @@ class SettingsController extends Controller
         $dimensions = [
             'banner_image_desktop' => ['width' => 1920, 'height' => 800],
             'banner_image_mobile' => ['width' => 800, 'height' => 600],
+            'about_banner_image_desktop' => ['width' => 1920, 'height' => 600],
+            'about_banner_image_mobile' => ['width' => 800, 'height' => 400],
             'og_image' => ['width' => 1200, 'height' => 630],
         ];
 

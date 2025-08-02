@@ -176,6 +176,14 @@
                                                     <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                                                         {{ __('admin.settings.mobile_image_hint') }}
                                                     </p>
+                                                @elseif($key === 'about_banner_image_desktop')
+                                                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                                        Imagen para la página Acerca de en escritorio (1920x600px recomendado)
+                                                    </p>
+                                                @elseif($key === 'about_banner_image_mobile')
+                                                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                                        Imagen para la página Acerca de en móvil (800x400px recomendado)
+                                                    </p>
                                                 @elseif($key === 'og_image')
                                                     <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                                                         {{ __('admin.settings.og_image_hint') }}

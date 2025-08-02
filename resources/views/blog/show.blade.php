@@ -12,11 +12,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="post-id" content="{{ $post->id }}">
-    <title>{{ $post->title }} - ByMelodia</title>
+    
+    <!-- SEO Meta Tags -->
+    <x-seo-meta 
+        :title="$post->title"
+        :description="$post->excerpt ?? Str::limit(strip_tags($post->content), 160)"
+        :keywords="$post->category->name"
+        :image="$post->featured_image ? asset('storage/' . $post->featured_image) : null"
+        :url="route('blog.show', $post->slug)"
+        type="article"
+        :article="[
+            'author' => $post->user->name,
+            'published_time' => $post->published_at->toISOString(),
+            'modified_time' => $post->updated_at->toISOString(),
+            'section' => $post->category->name,
+            'tags' => [$post->category->name]
+        ]"
+    />
+    
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="/images/logo_bymelodia_blanco.png">
     <link rel="apple-touch-icon" href="/images/logo_bymelodia_blanco.png">
-    <meta name="description" content="{{ $post->excerpt ?? Str::limit(strip_tags($post->content), 160) }}">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -62,7 +78,7 @@
                 <a href="{{ route('blog.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-azul-intenso dark:hover:text-azul-claro transition-colors font-medium text-lg">
                     {{ __('ui.nav.blog') }}
                 </a>
-                <a href="#" class="text-gray-700 dark:text-gray-300 hover:text-azul-intenso dark:hover:text-azul-claro transition-colors font-medium text-lg">
+                <a href="{{ route('about') }}" class="text-gray-700 dark:text-gray-300 hover:text-azul-intenso dark:hover:text-azul-claro transition-colors font-medium text-lg">
                     {{ __('ui.nav.about') }}
                 </a>
             </nav>
