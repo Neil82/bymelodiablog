@@ -10,7 +10,7 @@ class AnalyticsTracker {
         this.isActive = true;
         this.eventQueue = [];
         this.config = {
-            trackingInterval: 20000, // 20 seconds
+            trackingInterval: 5000, // 5 seconds - much more frequent
             apiEndpoint: '/api/tracking',
             batchSize: 10,
             sessionTimeout: 30 * 60 * 1000 // 30 minutes
@@ -154,7 +154,12 @@ class AnalyticsTracker {
     }
 
     startTracking() {
-        // Track every 20 seconds
+        // Send first time tracking after 3 seconds
+        setTimeout(() => {
+            this.trackActivity();
+        }, 3000);
+
+        // Track every 5 seconds
         this.trackingInterval = setInterval(() => {
             this.trackActivity();
         }, this.config.trackingInterval);
