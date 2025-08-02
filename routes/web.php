@@ -49,11 +49,13 @@ Route::get('/newsletter/unsubscribe/{token}', [App\Http\Controllers\NewsletterCo
 Route::prefix('api')->group(function () {
     Route::get('languages/available', [LanguageController::class, 'getAvailableLanguages']);
     Route::get('languages/detect-browser', [LanguageController::class, 'detectBrowserLanguage']);
-    
-    // Analytics tracking API
-    Route::post('tracking/session/start', [TrackingController::class, 'startSession']);
-    Route::post('tracking/events', [TrackingController::class, 'trackEvents']);
-    Route::post('tracking/session/end', [TrackingController::class, 'endSession']);
+});
+
+// Analytics tracking API (without CSRF)
+Route::prefix('api/tracking')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])->group(function () {
+    Route::post('session/start', [TrackingController::class, 'startSession']);
+    Route::post('events', [TrackingController::class, 'trackEvents']);
+    Route::post('session/end', [TrackingController::class, 'endSession']);
 });
 
 // SEO routes
