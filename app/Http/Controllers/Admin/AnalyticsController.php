@@ -355,7 +355,7 @@ class AnalyticsController extends Controller
 
     private function getPostCountryAnalytics($startDate)
     {
-        // Get country data from tracking events joined with user sessions WHERE there's time data
+        // STRICT: Only get country data from tracking events that have REAL time data
         $countryData = DB::table('tracking_events as te')
             ->join('user_sessions as us', 'te.user_session_id', '=', 'us.id')
             ->leftJoin('posts as p', 'te.post_id', '=', 'p.id')
@@ -363,7 +363,8 @@ class AnalyticsController extends Controller
             ->where('te.event_time', '>=', $startDate)
             ->whereNotNull('us.country_name')
             ->whereNotNull('te.post_id')
-            ->whereRaw('CAST(JSON_UNQUOTE(JSON_EXTRACT(te.event_data, "$.time_on_page")) AS UNSIGNED) > 30') // Only sessions with >30s time
+            ->whereRaw('JSON_EXTRACT(te.event_data, "$.time_on_page") IS NOT NULL') // Must have time data
+            ->whereRaw('CAST(JSON_UNQUOTE(JSON_EXTRACT(te.event_data, "$.time_on_page")) AS UNSIGNED) > 30') // Must be >30s
             ->selectRaw('
                 te.post_id,
                 p.title as post_title,
@@ -378,52 +379,21 @@ class AnalyticsController extends Controller
             ->get()
             ->groupBy('post_id');
 
-        // If no real tracking data with time, only show countries that would realistically have engagement
-        if ($countryData->isEmpty()) {
-            // Only show geographic data for posts that have sufficient views to indicate real engagement
-            $engagedPosts = Post::where('views', '>=', 5)->orderByDesc('views')->get(); // Only posts with 5+ views
-            
-            if ($engagedPosts->count() > 0) {
-                // Only show top 3 Spanish-speaking countries for engaged posts
-                $primaryCountries = [
-                    ['name' => 'México', 'code' => 'MX'],
-                    ['name' => 'España', 'code' => 'ES'],
-                    ['name' => 'Colombia', 'code' => 'CO']
-                ];
-
-                foreach($engagedPosts as $post) {
-                    // Only show 2-3 countries max, and only for highly viewed posts
-                    $numCountries = min(3, max(1, intval($post->views / 8))); 
-                    $postCountries = collect($primaryCountries)->take($numCountries);
-                    
-                    $countryData[$post->id] = $postCountries->map(function($country) use ($post) {
-                        // More conservative visitor counts
-                        $visitors = min(4, max(1, intval($post->views / 5))); 
-                        return (object)[
-                            'post_id' => $post->id,
-                            'post_title' => $post->title,
-                            'country_name' => $country['name'],
-                            'country_code' => $country['code'],
-                            'unique_visitors' => $visitors,
-                            'total_views' => $visitors,
-                            'avg_time_on_page' => 60 + ($post->views * 5) // Time-based data
-                        ];
-                    });
-                }
-            }
-        }
-
+        // NO SIMULATION - Only return data if we have real time tracking
+        // If no real data with time tracking exists, return empty collection
         return $countryData;
     }
 
     private function getPostTimeAnalytics($startDate)
     {
-        // Get time analytics from tracking events
+        // STRICT: Only get time analytics from tracking events that have REAL time data
         $timeData = DB::table('tracking_events as te')
             ->leftJoin('posts as p', 'te.post_id', '=', 'p.id')
             ->where('te.event_type', 'page_view')
             ->where('te.event_time', '>=', $startDate)
             ->whereNotNull('te.post_id')
+            ->whereRaw('JSON_EXTRACT(te.event_data, "$.time_on_page") IS NOT NULL') // Must have time data
+            ->whereRaw('CAST(JSON_UNQUOTE(JSON_EXTRACT(te.event_data, "$.time_on_page")) AS UNSIGNED) > 0') // Must be >0s
             ->selectRaw('
                 te.post_id,
                 p.title as post_title,
@@ -435,30 +405,8 @@ class AnalyticsController extends Controller
             ->get()
             ->keyBy('post_id');
 
-        // If no real tracking data, only simulate time analytics for posts with real engagement
-        if ($timeData->isEmpty()) {
-            // Only show time data for posts that have meaningful engagement (5+ views)
-            $engagedPosts = Post::where('views', '>=', 5)->orderByDesc('views')->get();
-            
-            foreach($engagedPosts as $post) {
-                // More conservative time calculation - only show if post has real engagement
-                $baseTime = 90; // 1.5 minute base for engaged posts
-                $bonusTime = min(180, $post->views * 8); // Up to 3 minutes bonus 
-                $avgTime = $baseTime + $bonusTime;
-                
-                // Only create time data for posts that would realistically have this data
-                if ($post->views >= 5) {
-                    $timeData[$post->id] = (object)[
-                        'post_id' => $post->id,
-                        'post_title' => $post->title,
-                        'avg_time_seconds' => $avgTime,
-                        'max_time_seconds' => $avgTime * rand(2, 3), // Max time is 2-3x average
-                        'total_sessions' => $post->views // Use real view count as sessions
-                    ];
-                }
-            }
-        }
-
+        // NO SIMULATION - Only return data if we have real time tracking
+        // If no real time data exists, return empty collection
         return $timeData;
     }
 }
