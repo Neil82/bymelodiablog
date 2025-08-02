@@ -135,12 +135,12 @@ class TrackingController extends Controller
                         'user_session_id' => $session->id,
                         'event_type' => $eventData['event_type'],
                         'url' => $eventData['url'],
-                        'page_title' => $eventData['page_title'],
-                        'post_id' => $eventData['post_id'],
-                        'time_on_page' => $eventData['time_on_page'],
-                        'scroll_depth' => $eventData['scroll_depth'],
-                        'element_clicked' => $eventData['element_clicked'],
-                        'event_data' => $eventData['event_data'],
+                        'page_title' => $eventData['page_title'] ?? null,
+                        'post_id' => $eventData['post_id'] ?? null,
+                        'time_on_page' => $eventData['time_on_page'] ?? null,
+                        'scroll_depth' => $eventData['scroll_depth'] ?? null,
+                        'element_clicked' => $eventData['element_clicked'] ?? null,
+                        'event_data' => $eventData['event_data'] ?? null,
                         'event_time' => $eventData['event_time']
                     ]);
 
