@@ -2,6 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Nueva paleta de colores ByMelodia */
+:root {
+    --azul-claro: #a7b9e9;
+    --rosado-pastel: #f3b3c5;
+    --azul-intenso: #0048f4;
+    --verde-lima: #d7e17c;
+}
+
+/* Clases utilitarias para la nueva paleta */
+.bg-brand-gradient {
+    background: linear-gradient(135deg, var(--azul-claro) 0%, var(--rosado-pastel) 100%);
+}
+
+.bg-brand-gradient-alt {
+    background: linear-gradient(135deg, var(--azul-intenso) 0%, var(--verde-lima) 100%);
+}
+
+.text-brand-gradient {
+    background: linear-gradient(135deg, var(--azul-intenso) 0%, var(--rosado-pastel) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.border-brand-gradient {
+    border: 2px solid;
+    border-image: linear-gradient(135deg, var(--azul-claro), var(--rosado-pastel)) 1;
+}
+
 /* Custom utilities for better UX */
 .line-clamp-1 {
     display: -webkit-box;
