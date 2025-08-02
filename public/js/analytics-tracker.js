@@ -428,16 +428,22 @@ class AnalyticsTracker {
     }
 
     getPostId() {
-        // Try to get post ID from meta tag or URL
+        // Try to get post ID from meta tag first
         const metaPostId = document.querySelector('meta[name="post-id"]');
-        if (metaPostId) {
+        if (metaPostId && metaPostId.getAttribute('content')) {
             return parseInt(metaPostId.getAttribute('content'));
         }
 
-        // Try to extract from URL pattern
-        const urlMatch = window.location.pathname.match(/\/posts?\/(\d+)/);
-        if (urlMatch) {
-            return parseInt(urlMatch[1]);
+        // Try to extract from URL pattern for blog posts
+        // Pattern: /blog/slug-de-post
+        const urlPath = window.location.pathname;
+        if (urlPath.startsWith('/blog/') && urlPath !== '/blog' && urlPath !== '/blog/') {
+            // This is a blog post, but we need the ID from the meta tag
+            // Since we use slugs, let's check if there's a data attribute or similar
+            const postElement = document.querySelector('[data-post-id]');
+            if (postElement) {
+                return parseInt(postElement.getAttribute('data-post-id'));
+            }
         }
 
         return null;
