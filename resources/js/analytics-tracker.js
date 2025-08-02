@@ -12,7 +12,7 @@ class AnalyticsTracker {
         this.config = {
             trackingInterval: 5000, // 5 seconds - much more frequent
             apiEndpoint: '/api/tracking',
-            batchSize: 10,
+            batchSize: 1, // Send immediately, don't batch
             sessionTimeout: 30 * 60 * 1000 // 30 minutes
         };
         
