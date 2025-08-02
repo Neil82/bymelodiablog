@@ -51,12 +51,7 @@ Route::prefix('api')->group(function () {
     Route::get('languages/detect-browser', [LanguageController::class, 'detectBrowserLanguage']);
 });
 
-// Analytics tracking API (without CSRF)
-Route::prefix('api/tracking')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])->group(function () {
-    Route::post('session/start', [TrackingController::class, 'startSession']);
-    Route::post('events', [TrackingController::class, 'trackEvents']);
-    Route::post('session/end', [TrackingController::class, 'endSession']);
-});
+// Analytics tracking API routes moved to routes/api.php
 
 // SEO routes
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap.index');
