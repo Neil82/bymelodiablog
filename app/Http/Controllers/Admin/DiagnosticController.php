@@ -112,11 +112,12 @@ class DiagnosticController extends Controller
                 ->orderByDesc('count')
                 ->get(),
             'events_with_post_id' => TrackingEvent::whereNotNull('post_id')->count(),
-            'events_with_time_data' => TrackingEvent::whereRaw('JSON_EXTRACT(event_data, "$.time_on_page") IS NOT NULL')->count(),
-            'events_with_meaningful_time' => TrackingEvent::whereRaw('CAST(JSON_UNQUOTE(JSON_EXTRACT(event_data, "$.time_on_page")) AS UNSIGNED) > 30')->count(),
+            'events_with_time_data' => TrackingEvent::whereNotNull('time_on_page')->count(),
+            'events_with_meaningful_time' => TrackingEvent::where('time_on_page', '>', 30)->count(),
             'recent_events' => $events->map(function($event) {
-                $timeOnPage = null;
-                if ($event->event_data && isset($event->event_data['time_on_page'])) {
+                // First check direct column, then check event_data for backward compatibility
+                $timeOnPage = $event->time_on_page;
+                if (!$timeOnPage && $event->event_data && isset($event->event_data['time_on_page'])) {
                     $timeOnPage = $event->event_data['time_on_page'];
                 }
                 
@@ -148,8 +149,8 @@ class DiagnosticController extends Controller
             ->where('te.event_time', '>=', $startDate)
             ->whereNotNull('us.country_name')
             ->whereNotNull('te.post_id')
-            ->whereRaw('JSON_EXTRACT(te.event_data, "$.time_on_page") IS NOT NULL')
-            ->whereRaw('CAST(JSON_UNQUOTE(JSON_EXTRACT(te.event_data, "$.time_on_page")) AS UNSIGNED) > 30')
+            ->whereNotNull('te.time_on_page')
+            ->where('te.time_on_page', '>', 30)
             ->selectRaw('
                 te.post_id,
                 p.title as post_title,
@@ -157,7 +158,7 @@ class DiagnosticController extends Controller
                 us.country_code,
                 COUNT(DISTINCT us.id) as unique_visitors,
                 COUNT(*) as total_views,
-                AVG(CAST(JSON_UNQUOTE(JSON_EXTRACT(te.event_data, "$.time_on_page")) AS UNSIGNED)) as avg_time_on_page
+                AVG(te.time_on_page) as avg_time_on_page
             ')
             ->groupBy('te.post_id', 'p.title', 'us.country_name', 'us.country_code')
             ->orderByDesc('total_views')
@@ -169,13 +170,13 @@ class DiagnosticController extends Controller
             ->where('te.event_type', 'page_view')
             ->where('te.event_time', '>=', $startDate)
             ->whereNotNull('te.post_id')
-            ->whereRaw('JSON_EXTRACT(te.event_data, "$.time_on_page") IS NOT NULL')
-            ->whereRaw('CAST(JSON_UNQUOTE(JSON_EXTRACT(te.event_data, "$.time_on_page")) AS UNSIGNED) > 0')
+            ->whereNotNull('te.time_on_page')
+            ->where('te.time_on_page', '>', 0)
             ->selectRaw('
                 te.post_id,
                 p.title as post_title,
-                AVG(CAST(JSON_UNQUOTE(JSON_EXTRACT(te.event_data, "$.time_on_page")) AS UNSIGNED)) as avg_time_seconds,
-                MAX(CAST(JSON_UNQUOTE(JSON_EXTRACT(te.event_data, "$.time_on_page")) AS UNSIGNED)) as max_time_seconds,
+                AVG(te.time_on_page) as avg_time_seconds,
+                MAX(te.time_on_page) as max_time_seconds,
                 COUNT(*) as total_sessions
             ')
             ->groupBy('te.post_id', 'p.title')
