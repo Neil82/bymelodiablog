@@ -158,28 +158,27 @@ class AnalyticsController extends Controller
         $period = $request->get('period', '30');
         $startDate = now()->subDays($period);
 
-        // Get posts with basic analytics from posts table (fallback to existing data)
-        $posts = Post::where('published_at', '>=', $startDate)
-            ->orWhere('views', '>', 0) // Include posts with any views regardless of date
+        // Get posts with basic analytics from posts table (use real data only)
+        $posts = Post::where('views', '>', 0)
             ->orderByDesc('views')
             ->get()
             ->map(function($post) {
-                // Calculate estimated metrics based on views
-                $estimatedUniqueViews = round($post->views * 0.7); // ~70% unique views
-                $estimatedAvgTime = rand(45, 180); // 45-180 seconds average
-                $estimatedBounceRate = rand(25, 60); // 25-60% bounce rate
+                // Calculate estimated metrics based on views (but keep real view counts)
+                $estimatedUniqueViews = max(1, round($post->views * 0.7)); // ~70% unique views
+                $baseTime = 60 + ($post->views * 10); // More time for popular posts
+                $estimatedAvgTime = min(300, max(60, $baseTime)); // 1-5 minutes range
+                $estimatedBounceRate = max(25, min(75, 80 - ($post->views * 2))); // Lower bounce rate for popular posts
                 
                 return [
                     'post' => $post,
-                    'total_views' => $post->views,
+                    'total_views' => $post->views, // Use real view count
                     'unique_views' => $estimatedUniqueViews,
                     'avg_time' => $estimatedAvgTime,
                     'total_time' => $post->views * $estimatedAvgTime,
                     'bounce_rate' => $estimatedBounceRate,
-                    'scroll_depth_avg' => rand(65, 85) // 65-85% scroll depth
+                    'scroll_depth_avg' => min(95, max(50, 60 + ($post->views * 2))) // Better scroll for popular posts
                 ];
-            })
-            ->where('total_views', '>', 0); // Only posts with views
+            });
 
         // Try to get real tracking data if available
         $trackingData = TrackingEvent::where('event_type', 'page_view')
@@ -377,9 +376,9 @@ class AnalyticsController extends Controller
             ->get()
             ->groupBy('post_id');
 
-        // If no real tracking data, simulate some geographic data
+        // If no real tracking data, simulate some geographic data based on real posts
         if ($countryData->isEmpty()) {
-            $posts = Post::where('views', '>', 0)->take(5)->get();
+            $realPosts = Post::where('views', '>', 0)->orderByDesc('views')->get();
             $countries = [
                 ['name' => 'México', 'code' => 'MX'],
                 ['name' => 'Colombia', 'code' => 'CO'],
@@ -390,16 +389,18 @@ class AnalyticsController extends Controller
                 ['name' => 'Perú', 'code' => 'PE']
             ];
 
-            foreach($posts as $post) {
-                $postCountries = collect($countries)->random(rand(2, 4));
+            foreach($realPosts as $post) {
+                $numCountries = min(4, max(2, intval($post->views / 3))); // More countries for popular posts
+                $postCountries = collect($countries)->random($numCountries);
                 $countryData[$post->id] = $postCountries->map(function($country) use ($post) {
+                    $maxViews = max(1, intval($post->views * 0.4));
                     return (object)[
                         'post_id' => $post->id,
                         'post_title' => $post->title,
                         'country_name' => $country['name'],
                         'country_code' => $country['code'],
-                        'unique_visitors' => rand(1, round($post->views * 0.3)),
-                        'total_views' => rand(1, round($post->views * 0.5))
+                        'unique_visitors' => max(1, rand(1, intval($post->views * 0.2))),
+                        'total_views' => max(1, rand(1, $maxViews))
                     ];
                 });
             }
@@ -427,17 +428,21 @@ class AnalyticsController extends Controller
             ->get()
             ->keyBy('post_id');
 
-        // If no real tracking data, simulate time analytics
+        // If no real tracking data, simulate time analytics based on real posts and views
         if ($timeData->isEmpty()) {
-            $posts = Post::where('views', '>', 0)->get();
-            foreach($posts as $post) {
-                $avgTime = rand(45, 300); // 45 seconds to 5 minutes
+            $realPosts = Post::where('views', '>', 0)->orderByDesc('views')->get();
+            foreach($realPosts as $post) {
+                // More realistic time calculation based on views (popular posts = longer time)
+                $baseTime = 60; // 1 minute base
+                $bonusTime = min(240, $post->views * 10); // Up to 4 minutes bonus for popular posts
+                $avgTime = $baseTime + $bonusTime;
+                
                 $timeData[$post->id] = (object)[
                     'post_id' => $post->id,
                     'post_title' => $post->title,
                     'avg_time_seconds' => $avgTime,
-                    'max_time_seconds' => $avgTime * rand(2, 4),
-                    'total_sessions' => $post->views
+                    'max_time_seconds' => $avgTime * rand(2, 3), // Max time is 2-3x average
+                    'total_sessions' => $post->views // Use real view count as sessions
                 ];
             }
         }
