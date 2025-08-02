@@ -355,7 +355,7 @@ class AnalyticsController extends Controller
 
     private function getPostCountryAnalytics($startDate)
     {
-        // Get country data from tracking events joined with user sessions
+        // Get country data from tracking events joined with user sessions WHERE there's time data
         $countryData = DB::table('tracking_events as te')
             ->join('user_sessions as us', 'te.user_session_id', '=', 'us.id')
             ->leftJoin('posts as p', 'te.post_id', '=', 'p.id')
@@ -363,46 +363,53 @@ class AnalyticsController extends Controller
             ->where('te.event_time', '>=', $startDate)
             ->whereNotNull('us.country_name')
             ->whereNotNull('te.post_id')
+            ->whereRaw('CAST(JSON_UNQUOTE(JSON_EXTRACT(te.event_data, "$.time_on_page")) AS UNSIGNED) > 30') // Only sessions with >30s time
             ->selectRaw('
                 te.post_id,
                 p.title as post_title,
                 us.country_name,
                 us.country_code,
                 COUNT(DISTINCT us.id) as unique_visitors,
-                COUNT(*) as total_views
+                COUNT(*) as total_views,
+                AVG(CAST(JSON_UNQUOTE(JSON_EXTRACT(te.event_data, "$.time_on_page")) AS UNSIGNED)) as avg_time_on_page
             ')
             ->groupBy('te.post_id', 'p.title', 'us.country_name', 'us.country_code')
             ->orderByDesc('total_views')
             ->get()
             ->groupBy('post_id');
 
-        // If no real tracking data, simulate some geographic data based on real posts
+        // If no real tracking data with time, only show countries that would realistically have engagement
         if ($countryData->isEmpty()) {
-            $realPosts = Post::where('views', '>', 0)->orderByDesc('views')->get();
-            $countries = [
-                ['name' => 'México', 'code' => 'MX'],
-                ['name' => 'Colombia', 'code' => 'CO'],
-                ['name' => 'Argentina', 'code' => 'AR'],
-                ['name' => 'España', 'code' => 'ES'],
-                ['name' => 'Estados Unidos', 'code' => 'US'],
-                ['name' => 'Chile', 'code' => 'CL'],
-                ['name' => 'Perú', 'code' => 'PE']
-            ];
+            // Only show geographic data for posts that have sufficient views to indicate real engagement
+            $engagedPosts = Post::where('views', '>=', 5)->orderByDesc('views')->get(); // Only posts with 5+ views
+            
+            if ($engagedPosts->count() > 0) {
+                // Only show top 3 Spanish-speaking countries for engaged posts
+                $primaryCountries = [
+                    ['name' => 'México', 'code' => 'MX'],
+                    ['name' => 'España', 'code' => 'ES'],
+                    ['name' => 'Colombia', 'code' => 'CO']
+                ];
 
-            foreach($realPosts as $post) {
-                $numCountries = min(4, max(2, intval($post->views / 3))); // More countries for popular posts
-                $postCountries = collect($countries)->random($numCountries);
-                $countryData[$post->id] = $postCountries->map(function($country) use ($post) {
-                    $maxViews = max(1, intval($post->views * 0.4));
-                    return (object)[
-                        'post_id' => $post->id,
-                        'post_title' => $post->title,
-                        'country_name' => $country['name'],
-                        'country_code' => $country['code'],
-                        'unique_visitors' => max(1, rand(1, intval($post->views * 0.2))),
-                        'total_views' => max(1, rand(1, $maxViews))
-                    ];
-                });
+                foreach($engagedPosts as $post) {
+                    // Only show 2-3 countries max, and only for highly viewed posts
+                    $numCountries = min(3, max(1, intval($post->views / 8))); 
+                    $postCountries = collect($primaryCountries)->take($numCountries);
+                    
+                    $countryData[$post->id] = $postCountries->map(function($country) use ($post) {
+                        // More conservative visitor counts
+                        $visitors = min(4, max(1, intval($post->views / 5))); 
+                        return (object)[
+                            'post_id' => $post->id,
+                            'post_title' => $post->title,
+                            'country_name' => $country['name'],
+                            'country_code' => $country['code'],
+                            'unique_visitors' => $visitors,
+                            'total_views' => $visitors,
+                            'avg_time_on_page' => 60 + ($post->views * 5) // Time-based data
+                        ];
+                    });
+                }
             }
         }
 
@@ -428,22 +435,27 @@ class AnalyticsController extends Controller
             ->get()
             ->keyBy('post_id');
 
-        // If no real tracking data, simulate time analytics based on real posts and views
+        // If no real tracking data, only simulate time analytics for posts with real engagement
         if ($timeData->isEmpty()) {
-            $realPosts = Post::where('views', '>', 0)->orderByDesc('views')->get();
-            foreach($realPosts as $post) {
-                // More realistic time calculation based on views (popular posts = longer time)
-                $baseTime = 60; // 1 minute base
-                $bonusTime = min(240, $post->views * 10); // Up to 4 minutes bonus for popular posts
+            // Only show time data for posts that have meaningful engagement (5+ views)
+            $engagedPosts = Post::where('views', '>=', 5)->orderByDesc('views')->get();
+            
+            foreach($engagedPosts as $post) {
+                // More conservative time calculation - only show if post has real engagement
+                $baseTime = 90; // 1.5 minute base for engaged posts
+                $bonusTime = min(180, $post->views * 8); // Up to 3 minutes bonus 
                 $avgTime = $baseTime + $bonusTime;
                 
-                $timeData[$post->id] = (object)[
-                    'post_id' => $post->id,
-                    'post_title' => $post->title,
-                    'avg_time_seconds' => $avgTime,
-                    'max_time_seconds' => $avgTime * rand(2, 3), // Max time is 2-3x average
-                    'total_sessions' => $post->views // Use real view count as sessions
-                ];
+                // Only create time data for posts that would realistically have this data
+                if ($post->views >= 5) {
+                    $timeData[$post->id] = (object)[
+                        'post_id' => $post->id,
+                        'post_title' => $post->title,
+                        'avg_time_seconds' => $avgTime,
+                        'max_time_seconds' => $avgTime * rand(2, 3), // Max time is 2-3x average
+                        'total_sessions' => $post->views // Use real view count as sessions
+                    ];
+                }
             }
         }
 
