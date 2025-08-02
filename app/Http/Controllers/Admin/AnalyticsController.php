@@ -217,9 +217,8 @@ class AnalyticsController extends Controller
             'total_views' => $posts->sum('total_views')
         ];
 
-        // Get recent activity based on updated_at (posts recently viewed)
+        // Get recent activity - show ALL posts with views, ordered by most recent activity
         $recentActivity = Post::where('views', '>', 0)
-            ->where('updated_at', '>=', now()->subHours(24))
             ->orderByDesc('updated_at')
             ->limit(20)
             ->get()
@@ -363,8 +362,8 @@ class AnalyticsController extends Controller
             ->where('te.event_time', '>=', $startDate)
             ->whereNotNull('us.country_name')
             ->whereNotNull('te.post_id')
-            ->whereRaw('JSON_EXTRACT(te.event_data, "$.time_on_page") IS NOT NULL') // Must have time data
-            ->whereRaw('CAST(JSON_UNQUOTE(JSON_EXTRACT(te.event_data, "$.time_on_page")) AS UNSIGNED) > 30') // Must be >30s
+            ->whereNotNull('te.time_on_page') // Must have time data (changed to use direct column)
+            ->where('te.time_on_page', '>', 10) // Reduced from 30s to 10s for faster results
             ->selectRaw('
                 te.post_id,
                 p.title as post_title,
@@ -372,7 +371,7 @@ class AnalyticsController extends Controller
                 us.country_code,
                 COUNT(DISTINCT us.id) as unique_visitors,
                 COUNT(*) as total_views,
-                AVG(CAST(JSON_UNQUOTE(JSON_EXTRACT(te.event_data, "$.time_on_page")) AS UNSIGNED)) as avg_time_on_page
+                AVG(te.time_on_page) as avg_time_on_page
             ')
             ->groupBy('te.post_id', 'p.title', 'us.country_name', 'us.country_code')
             ->orderByDesc('total_views')
@@ -392,13 +391,13 @@ class AnalyticsController extends Controller
             ->where('te.event_type', 'page_view')
             ->where('te.event_time', '>=', $startDate)
             ->whereNotNull('te.post_id')
-            ->whereRaw('JSON_EXTRACT(te.event_data, "$.time_on_page") IS NOT NULL') // Must have time data
-            ->whereRaw('CAST(JSON_UNQUOTE(JSON_EXTRACT(te.event_data, "$.time_on_page")) AS UNSIGNED) > 0') // Must be >0s
+            ->whereNotNull('te.time_on_page') // Must have time data (using direct column)
+            ->where('te.time_on_page', '>', 0) // Must be >0s
             ->selectRaw('
                 te.post_id,
                 p.title as post_title,
-                AVG(CAST(JSON_UNQUOTE(JSON_EXTRACT(te.event_data, "$.time_on_page")) AS UNSIGNED)) as avg_time_seconds,
-                MAX(CAST(JSON_UNQUOTE(JSON_EXTRACT(te.event_data, "$.time_on_page")) AS UNSIGNED)) as max_time_seconds,
+                AVG(te.time_on_page) as avg_time_seconds,
+                MAX(te.time_on_page) as max_time_seconds,
                 COUNT(*) as total_sessions
             ')
             ->groupBy('te.post_id', 'p.title')
