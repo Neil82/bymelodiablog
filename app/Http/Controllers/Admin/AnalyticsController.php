@@ -163,20 +163,20 @@ class AnalyticsController extends Controller
             ->orderByDesc('views')
             ->get()
             ->map(function($post) {
-                // Calculate estimated metrics based on views (but keep real view counts)
-                $estimatedUniqueViews = max(1, round($post->views * 0.7)); // ~70% unique views
-                $baseTime = 60 + ($post->views * 10); // More time for popular posts
-                $estimatedAvgTime = min(300, max(60, $baseTime)); // 1-5 minutes range
-                $estimatedBounceRate = max(25, min(75, 80 - ($post->views * 2))); // Lower bounce rate for popular posts
+                // Default values based on total views
+                $uniqueViews = $post->views; // Default to total views (conservative)
+                $estimatedAvgTime = 60; // Default 1 minute
+                $estimatedBounceRate = 50; // Default 50%
+                $estimatedScrollDepth = 70; // Default 70%
                 
                 return [
                     'post' => $post,
                     'total_views' => $post->views, // Use real view count
-                    'unique_views' => $estimatedUniqueViews,
+                    'unique_views' => $uniqueViews,
                     'avg_time' => $estimatedAvgTime,
                     'total_time' => $post->views * $estimatedAvgTime,
                     'bounce_rate' => $estimatedBounceRate,
-                    'scroll_depth_avg' => min(95, max(50, 60 + ($post->views * 2))) // Better scroll for popular posts
+                    'scroll_depth_avg' => $estimatedScrollDepth
                 ];
             });
 
@@ -222,11 +222,17 @@ class AnalyticsController extends Controller
             ->orderByDesc('updated_at')
             ->limit(20)
             ->get()
-            ->map(function($post) {
+            ->map(function($post) use ($trackingData) {
+                // Use real tracking data if available, otherwise use the post data
+                $uniqueViews = $post->views; // Default to total views
+                if ($trackingData->has($post->id)) {
+                    $uniqueViews = $trackingData->get($post->id)->unique_views;
+                }
+                
                 return [
                     'post' => $post,
                     'views' => $post->views,
-                    'unique_views' => round($post->views * 0.7),
+                    'unique_views' => $uniqueViews,
                     'last_viewed' => $post->updated_at
                 ];
             });
