@@ -433,18 +433,24 @@ class AnalyticsTracker {
     }
 
     getPostId() {
-        // Try to get post ID from meta tag or URL
+        // Try to get post ID from meta tag first
         const metaPostId = document.querySelector('meta[name="post-id"]');
         if (metaPostId) {
-            return parseInt(metaPostId.getAttribute('content'));
+            const postId = parseInt(metaPostId.getAttribute('content'));
+            console.log('Found post ID from meta tag:', postId);
+            return postId;
         }
 
-        // Try to extract from URL pattern
-        const urlMatch = window.location.pathname.match(/\/posts?\/(\d+)/);
-        if (urlMatch) {
-            return parseInt(urlMatch[1]);
+        // Try to extract from URL patterns
+        const pathname = window.location.pathname;
+        
+        // Pattern for /blog/post-slug or /posts/123
+        const blogMatch = pathname.match(/\/blog\/[\w-]+/) || pathname.match(/\/posts?\/(\d+)/);
+        if (blogMatch) {
+            console.log('Detected blog post URL but no meta tag found:', pathname);
         }
 
+        console.log('No post ID found for:', pathname);
         return null;
     }
 
