@@ -24,7 +24,7 @@
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
 
     <!-- Header -->
-    <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 relative">
+    <header class="bg-white dark:bg-gray-900 py-8 border-b border-gray-200 dark:border-gray-700 relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <!-- Language Selector -->
             <div class="absolute top-4 left-4">
@@ -32,10 +32,10 @@
             </div>
             
             <!-- Theme Toggle - Top Right -->
-            <div class="absolute top-4 right-4">
+            <div class="absolute top-6 right-6">
                 <button
                     id="theme-toggle"
-                    class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                    class="p-3 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                     aria-label="Toggle theme"
                 >
                     <span id="theme-icon">🌙</span>
@@ -55,34 +55,33 @@
             </div>
             
             <!-- Navigation Menu - Below Logo -->
-            <nav class="flex flex-wrap justify-center items-center gap-4 md:gap-8">
-                <a href="{{ route('home') }}" class="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">
+            <nav class="flex justify-center items-center gap-12">
+                <a href="{{ route('home') }}" class="text-gray-700 dark:text-gray-300 hover:text-azul-intenso dark:hover:text-azul-claro transition-colors font-medium text-lg">
                     {{ __('ui.nav.home') }}
                 </a>
-                <a href="{{ route('blog.index') }}" class="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">
+                <a href="{{ route('blog.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-azul-intenso dark:hover:text-azul-claro transition-colors font-medium text-lg">
                     {{ __('ui.nav.blog') }}
                 </a>
-                <a href="#" class="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">
+                <a href="#" class="text-gray-700 dark:text-gray-300 hover:text-azul-intenso dark:hover:text-azul-claro transition-colors font-medium text-lg">
                     {{ __('ui.nav.about') }}
                 </a>
-                
             </nav>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-white dark:bg-gray-900 min-h-screen">
         
         <!-- Breadcrumb -->
         <nav class="mb-8">
             <ol class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
-                <li><a href="{{ route('home') }}" class="hover:text-blue-600 dark:hover:text-blue-400">{{ __('ui.nav.home') }}</a></li>
+                <li><a href="{{ route('home') }}" class="hover:text-azul-intenso dark:hover:text-azul-claro">{{ __('ui.nav.home') }}</a></li>
                 <li><span>/</span></li>
-                <li><a href="{{ route('blog.index') }}" class="hover:text-blue-600 dark:hover:text-blue-400">{{ __('ui.nav.blog') }}</a></li>
+                <li><a href="{{ route('blog.index') }}" class="hover:text-azul-intenso dark:hover:text-azul-claro">{{ __('ui.nav.blog') }}</a></li>
                 <li><span>/</span></li>
-                <li><a href="{{ route('blog.category', $post->category->slug) }}" class="hover:text-blue-600 dark:hover:text-blue-400">{{ $post->category->name }}</a></li>
+                <li><a href="{{ route('blog.category', $post->category->slug) }}" class="hover:text-azul-intenso dark:hover:text-azul-claro">{{ $post->category->name }}</a></li>
                 <li><span>/</span></li>
-                <li class="text-gray-700 dark:text-gray-300">{{ $post->title }}</li>
+                <li class="text-azul-intenso dark:text-azul-claro font-medium">{{ $post->title }}</li>
             </ol>
         </nav>
 
@@ -95,7 +94,9 @@
                 </span>
             </div>
             
-            <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">{{ $post->title }}</h1>
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
+                {{ $post->title }}
+            </h1>
             
             <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 space-x-4">
                 <span>{{ __('ui.blog.by_author') }} {{ $post->user->name }}</span>
@@ -165,7 +166,7 @@
                 </h3>
 
                 <!-- Comment Form -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
+                <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 mb-8">
                     <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{{ __('ui.blog.leave_comment') }}</h4>
                     
                     @if(session('success'))
@@ -218,7 +219,7 @@
                             {{ __('ui.blog.comment_moderation') }}
                         </div>
                         <button type="submit" 
-                                class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
+                                class="px-6 py-3 bg-azul-intenso hover:bg-azul-intenso/90 text-white font-medium rounded-xl transition-all duration-300 shadow-lg">
                             {{ __('ui.blog.submit_comment') }}
                         </button>
                     </form>
@@ -228,10 +229,10 @@
                 @if($post->approvedComments->count() > 0)
                     <div class="space-y-6">
                         @foreach($post->approvedComments as $comment)
-                            <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
+                            <div class="bg-gradient-to-r from-azul-claro/10 to-rosado-pastel/10 dark:from-azul-intenso/20 dark:to-azul-claro/20 rounded-xl p-6 border border-azul-claro/20">
                                 <div class="flex items-center justify-between mb-3">
                                     <div class="flex items-center space-x-3">
-                                        <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-medium">
+                                        <div class="w-10 h-10 bg-brand-gradient rounded-full flex items-center justify-center text-white font-medium">
                                             {{ strtoupper(substr($comment->author_name, 0, 1)) }}
                                         </div>
                                         <div>
@@ -258,14 +259,14 @@
                 <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">{{ __('ui.blog.related_posts') }}</h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     @foreach($relatedPosts as $relatedPost)
-                        <article class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+                        <article class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-azul-claro/20">
                             @if($relatedPost->featured_image)
                                 <img src="{{ asset('storage/' . $relatedPost->featured_image) }}" alt="{{ $relatedPost->title }}" class="w-full h-32 object-cover">
                             @else
-                                <div class="w-full h-32 bg-gray-200 dark:bg-gray-700"></div>
+                                <div class="w-full h-32 bg-brand-gradient opacity-20"></div>
                             @endif
                             <div class="p-4">
-                                <h4 class="font-semibold text-gray-900 dark:text-white mb-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                <h4 class="font-semibold text-gray-900 dark:text-white mb-2 hover:text-azul-intenso dark:hover:text-azul-claro transition-colors">
                                     <a href="{{ route('blog.show', $relatedPost->slug) }}">{{ Str::limit($relatedPost->title, 50) }}</a>
                                 </h4>
                                 <p class="text-sm text-gray-500 dark:text-gray-400">{{ $relatedPost->published_at->diffForHumans() }}</p>

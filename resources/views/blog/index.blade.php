@@ -20,63 +20,62 @@
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
 
-    <!-- Header -->
-    <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <!-- Clean Header -->
+    <header class="bg-white dark:bg-gray-900 py-8 border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Language Selector -->
-            <div class="absolute top-4 left-4">
+            <div class="absolute top-6 left-6">
                 @include('components.language-selector')
             </div>
             
             <!-- Theme Toggle - Top Right -->
-            <div class="absolute top-4 right-4">
+            <div class="absolute top-6 right-6">
                 <button
                     id="theme-toggle"
-                    class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                    class="p-3 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                     aria-label="Toggle theme"
                 >
                     <span id="theme-icon">🌙</span>
                 </button>
             </div>
             
-            <!-- Centered Logo - Large -->
-            <div class="text-center mb-6">
+            <!-- Centered Logo -->
+            <div class="text-center mb-8">
                 <a href="{{ route('home') }}">
                     <img 
                         id="logo" 
                         src="/images/bymelodia_negro.png" 
                         alt="ByMelodia" 
-                        class="h-20 md:h-24 lg:h-28 w-auto mx-auto transition-all duration-300 hover:scale-105"
+                        class="h-12 w-auto mx-auto transition-all duration-300 hover:scale-105"
                     >
                 </a>
             </div>
             
-            <!-- Navigation Menu - Below Logo -->
-            <nav class="flex flex-wrap justify-center items-center gap-4 md:gap-8">
-                <a href="{{ route('home') }}" class="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">
+            <!-- Clean Navigation -->
+            <nav class="flex justify-center items-center gap-12">
+                <a href="{{ route('home') }}" class="text-gray-700 dark:text-gray-300 hover:text-azul-intenso dark:hover:text-azul-claro transition-colors font-medium text-lg">
                     {{ __('ui.nav.home') }}
                 </a>
-                <a href="{{ route('blog.index') }}" class="text-blue-600 dark:text-blue-400 font-semibold">
+                <a href="{{ route('blog.index') }}" class="text-azul-intenso dark:text-azul-claro font-semibold text-lg border-b-2 border-azul-intenso dark:border-azul-claro pb-1">
                     {{ __('ui.nav.blog') }}
                 </a>
-                <a href="#" class="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">
+                <a href="#" class="text-gray-700 dark:text-gray-300 hover:text-azul-intenso dark:hover:text-azul-claro transition-colors font-medium text-lg">
                     {{ __('ui.nav.about') }}
                 </a>
-                
             </nav>
         </div>
     </header>
 
     <!-- Page Header -->
-    <div class="bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-800 dark:to-purple-800 text-white py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 class="text-4xl font-bold mb-4">{{ __('ui.blog.title') }}</h1>
-            <p class="text-xl opacity-90">{{ __('ui.blog.subtitle') }}</p>
+    <div class="bg-white dark:bg-gray-900 py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">{{ __('ui.blog.title') }}</h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">{{ __('ui.blog.subtitle') }}</p>
         </div>
     </div>
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-gray-50 dark:bg-gray-900 min-h-screen">
         <div class="flex flex-col lg:flex-row gap-8">
             
             <!-- Posts Grid -->
@@ -84,7 +83,7 @@
                 @if($posts->count() > 0)
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                         @foreach($posts as $post)
-                            <article class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                            <article class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-200 dark:border-gray-700">
                                 @if($post->featured_image)
                                     <img src="{{ asset('storage/' . $post->featured_image) }}" alt="{{ $post->title }}" class="w-full h-48 object-cover">
                                 @else
@@ -101,7 +100,7 @@
                                         </span>
                                     </div>
                                     
-                                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2 hover:text-azul-intenso dark:hover:text-azul-claro transition-colors">
                                         <a href="{{ route('blog.show', $post->slug) }}">{{ $post->title }}</a>
                                     </h2>
                                     
@@ -131,14 +130,14 @@
             <!-- Sidebar -->
             <aside class="w-full lg:w-80 space-y-6">
                 <!-- Categories -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{{ __('ui.blog.categories') }}</h3>
-                    <div class="space-y-2">
+                    <div class="space-y-1">
                         @foreach($categories as $category)
                             <a href="{{ route('blog.category', $category->slug) }}" 
-                               class="flex items-center justify-between p-2 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                <span class="text-gray-700 dark:text-gray-300">{{ $category->name }}</span>
-                                <span class="text-xs bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-400 px-2 py-1 rounded-full">
+                               class="flex items-center justify-between p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 group">
+                                <span class="text-gray-700 dark:text-gray-300 group-hover:text-azul-intenso dark:group-hover:text-azul-claro font-medium">{{ $category->name }}</span>
+                                <span class="text-xs bg-azul-intenso/10 dark:bg-azul-claro/20 text-azul-intenso dark:text-azul-claro px-2 py-1 rounded-full font-medium">
                                     {{ $category->published_posts_count }}
                                 </span>
                             </a>
