@@ -1,7 +1,7 @@
 // Advanced Analytics Tracking System
 class AnalyticsTracker {
     constructor() {
-        this.sessionId = this.generateSessionId();
+        this.sessionId = this.getOrCreateSessionId();
         this.startTime = Date.now();
         this.lastActivityTime = Date.now();
         this.trackingInterval = null;
@@ -27,6 +27,42 @@ class AnalyticsTracker {
             this.trackPageView();
         } catch (error) {
             console.error('Failed to initialize analytics tracker:', error);
+        }
+    }
+
+    getOrCreateSessionId() {
+        const STORAGE_KEY = 'analytics_session';
+        const STORAGE_TIME_KEY = 'analytics_session_time';
+        
+        try {
+            // Check if we have an existing session
+            const existingSession = localStorage.getItem(STORAGE_KEY);
+            const sessionTime = localStorage.getItem(STORAGE_TIME_KEY);
+            
+            if (existingSession && sessionTime) {
+                const timeSinceSession = Date.now() - parseInt(sessionTime);
+                
+                // If session is less than 30 minutes old, reuse it
+                if (timeSinceSession < this.config.sessionTimeout) {
+                    console.log('Reusing existing session:', existingSession);
+                    // Update the timestamp
+                    localStorage.setItem(STORAGE_TIME_KEY, Date.now().toString());
+                    return existingSession;
+                }
+            }
+            
+            // Create new session
+            const newSessionId = this.generateSessionId();
+            localStorage.setItem(STORAGE_KEY, newSessionId);
+            localStorage.setItem(STORAGE_TIME_KEY, Date.now().toString());
+            
+            console.log('Created new session:', newSessionId);
+            return newSessionId;
+            
+        } catch (error) {
+            // Fallback if localStorage is not available
+            console.warn('localStorage not available, using temporary session');
+            return this.generateSessionId();
         }
     }
 
@@ -475,6 +511,16 @@ class AnalyticsTracker {
             clearInterval(this.trackingInterval);
         }
         this.flushEventQueue();
+    }
+
+    clearSession() {
+        try {
+            localStorage.removeItem('analytics_session');
+            localStorage.removeItem('analytics_session_time');
+            console.log('Session cleared');
+        } catch (error) {
+            console.warn('Could not clear session storage');
+        }
     }
 }
 
