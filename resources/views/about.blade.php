@@ -206,60 +206,40 @@
                     </div>
                 </div>
                 
-                <!-- Right side - Images positioned absolutely -->
-                <div class="hidden lg:block absolute right-0 top-0 w-1/2 h-full">
-                    <!-- Top row: Images 13 (2020) and 14 (2023) -->
-                    <!-- Image 1 - 2020 (13.png) -->
-                    <div class="absolute top-8 right-32 transform rotate-3 hover:rotate-0 transition-transform duration-300">
-                        <img src="/images/acercade/13.png" alt="2020 - Studygram" class="w-40 h-auto rounded-lg shadow-lg">
-                        <div class="absolute -bottom-4 -right-4 bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow-md">
-                            <span class="text-sm font-medium text-gray-600 dark:text-gray-400">2020</span>
+                <!-- Right side - Images in 2x2 grid -->
+                <div class="hidden lg:block w-1/2 ml-auto">
+                    <div class="grid grid-cols-2 gap-6 p-8">
+                        <!-- Top row: 13.png and 14.png -->
+                        <div>
+                            <img src="/images/acercade/13.png" alt="2020 - Studygram" class="w-full h-auto">
                         </div>
-                    </div>
-                    
-                    <!-- Image 2 - 2023 (14.png) -->
-                    <div class="absolute top-20 right-4 transform -rotate-2 hover:rotate-0 transition-transform duration-300">
-                        <img src="/images/acercade/14.png" alt="2023 - Cursos digitales" class="w-36 h-auto rounded-lg shadow-lg">
-                        <div class="absolute -bottom-4 -left-4 bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow-md">
-                            <span class="text-sm font-medium text-gray-600 dark:text-gray-400">2023</span>
+                        <div>
+                            <img src="/images/acercade/14.png" alt="2023 - Cursos digitales" class="w-full h-auto">
                         </div>
-                    </div>
-                    
-                    <!-- Bottom row: Images 15 (2024) and 16 (2025) -->
-                    <!-- Image 3 - 2024 (15.png) -->
-                    <div class="absolute bottom-24 right-20 transform rotate-1 hover:rotate-0 transition-transform duration-300">
-                        <img src="/images/acercade/15.png" alt="2024 - Universidad" class="w-44 h-auto rounded-lg shadow-lg">
-                        <div class="absolute -top-4 -right-4 bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow-md">
-                            <span class="text-sm font-medium text-gray-600 dark:text-gray-400">2024</span>
+                        
+                        <!-- Bottom row: 15.png and 16.png -->
+                        <div>
+                            <img src="/images/acercade/15.png" alt="2024 - Universidad" class="w-full h-auto">
                         </div>
-                    </div>
-                    
-                    <!-- Image 4 - 2025 (16.png) -->
-                    <div class="absolute bottom-4 right-32 transform -rotate-1 hover:rotate-0 transition-transform duration-300">
-                        <img src="/images/acercade/16.png" alt="2025 - Marca personal" class="w-40 h-auto rounded-lg shadow-lg">
-                        <div class="absolute -top-4 -left-4 bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow-md">
-                            <span class="text-sm font-medium text-gray-600 dark:text-gray-400">2025</span>
+                        <div>
+                            <img src="/images/acercade/16.png" alt="2025 - Marca personal" class="w-full h-auto">
                         </div>
                     </div>
                 </div>
                 
-                <!-- Mobile images - stacked below text -->
+                <!-- Mobile images - 2x2 grid below text -->
                 <div class="lg:hidden mt-12 grid grid-cols-2 gap-4">
-                    <div class="text-center">
-                        <img src="/images/acercade/13.png" alt="2020 - Studygram" class="w-full h-auto rounded-lg shadow-lg mb-2">
-                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">2020</span>
+                    <div>
+                        <img src="/images/acercade/13.png" alt="2020 - Studygram" class="w-full h-auto">
                     </div>
-                    <div class="text-center">
-                        <img src="/images/acercade/14.png" alt="2023 - Cursos digitales" class="w-full h-auto rounded-lg shadow-lg mb-2">
-                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">2023</span>
+                    <div>
+                        <img src="/images/acercade/14.png" alt="2023 - Cursos digitales" class="w-full h-auto">
                     </div>
-                    <div class="text-center">
-                        <img src="/images/acercade/15.png" alt="2024 - Universidad" class="w-full h-auto rounded-lg shadow-lg mb-2">
-                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">2024</span>
+                    <div>
+                        <img src="/images/acercade/15.png" alt="2024 - Universidad" class="w-full h-auto">
                     </div>
-                    <div class="text-center">
-                        <img src="/images/acercade/16.png" alt="2025 - Marca personal" class="w-full h-auto rounded-lg shadow-lg mb-2">
-                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">2025</span>
+                    <div>
+                        <img src="/images/acercade/16.png" alt="2025 - Marca personal" class="w-full h-auto">
                     </div>
                 </div>
             </div>
