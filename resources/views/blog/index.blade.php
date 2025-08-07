@@ -98,9 +98,10 @@
             
             <!-- Description Card -->
             <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-3xl p-8 shadow-xl border border-azul-claro/30">
-                <p class="text-xl md:text-2xl text-gray-700 dark:text-gray-200 font-medium leading-relaxed">
-                    {{ __('ui.blog.subtitle') }}
-                </p>
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-medium leading-tight">
+                    <span class="text-gray-900 dark:text-white">Bienvenida a </span>
+                    <span class="text-red-500">tu nueva versión</span>
+                </h1>
             </div>
         </div>
     </div>
