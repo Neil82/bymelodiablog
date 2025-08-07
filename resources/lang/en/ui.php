@@ -27,7 +27,7 @@ return [
     // Blog
     'blog' => [
         'title' => 'ByMelodia Blog',
-        'subtitle' => 'Discover youth content, music and trends',
+        'subtitle' => 'Welcome to your new version',
         'read_more' => 'Read more',
         'view_all_content' => 'Discover more',
         'comments' => 'comments',

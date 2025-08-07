@@ -95,11 +95,6 @@
         </div>
         
         <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <!-- Blog Badge -->
-            <div class="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-azul-claro/20 to-verde-lima/20 border-2 border-azul-claro/30 backdrop-blur-md text-sm font-medium mb-8 shadow-xl">
-                <span class="w-3 h-3 bg-gradient-to-r from-azul-intenso to-azul-claro rounded-full mr-3 animate-pulse shadow-md"></span>
-                <span class="text-azul-intenso dark:text-azul-claro font-semibold">Blog</span>
-            </div>
             
             <!-- Description Card -->
             <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-3xl p-8 shadow-xl border border-azul-claro/30">
