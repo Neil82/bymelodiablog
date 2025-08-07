@@ -128,6 +128,142 @@
         </div>
     </section>
 
+    <!-- Mi Historia Timeline Section -->
+    <section class="relative bg-white dark:bg-gray-900 py-16 overflow-hidden">
+        <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Timeline Layout -->
+            <div class="relative">
+                <!-- Left side - Text content -->
+                <div class="w-full lg:w-1/2">
+                    <!-- Section Title -->
+                    <div class="mb-12">
+                        <h2 class="text-4xl md:text-5xl font-bold leading-tight">
+                            <span class="text-gray-900 dark:text-white">Mi </span>
+                            <span class="text-green-400">historia</span>
+                        </h2>
+                    </div>
+                    
+                    <!-- Timeline Items -->
+                    <div class="space-y-8">
+                        <!-- 2020 -->
+                        <div class="timeline-item">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0">
+                                    <span class="text-2xl font-bold text-gray-900 dark:text-white">2020</span>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+                                        Empecé mi cuenta de "studygram" publicando apuntes bonitos, mi bullet journal y mucho, MUCHO lettering.
+                                    </p>
+                                    <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed mt-3">
+                                        Participé en concursos de arte y quedé entre los primeros puestos (pude colaborar con una marca internacional)
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 2023 -->
+                        <div class="timeline-item">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0">
+                                    <span class="text-2xl font-bold text-gray-900 dark:text-white">2023</span>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+                                        Tomaba cursos digitales en mi tiempo libre y logré certificarme en: Marketing, Diseño Gráfico, Comunicación y Liderazgo, Branding, entre otros.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 2024 -->
+                        <div class="timeline-item">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0">
+                                    <span class="text-2xl font-bold text-gray-900 dark:text-white">2024</span>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+                                        Ingresé a una de las mejores universidades privadas de mi país y conseguí una beca de honor por mi promedio alto
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 2025 -->
+                        <div class="timeline-item">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0">
+                                    <span class="text-2xl font-bold text-gray-900 dark:text-white">2025</span>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+                                        Decidí comenzar con mi marca personal para compartir todo lo que aprendí estos años (y sigo aprendiendo)
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right side - Images positioned absolutely -->
+                <div class="hidden lg:block absolute right-0 top-0 w-1/2 h-full">
+                    <!-- Image 1 - 2020 -->
+                    <div class="absolute top-8 right-20 transform rotate-3 hover:rotate-0 transition-transform duration-300">
+                        <img src="/images/acercade/13.png" alt="2020 - Studygram" class="w-48 h-auto rounded-lg shadow-lg">
+                        <div class="absolute -bottom-4 -right-4 bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow-md">
+                            <span class="text-sm font-medium text-gray-600 dark:text-gray-400">2020</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Image 2 - 2023 -->
+                    <div class="absolute top-64 right-4 transform -rotate-2 hover:rotate-0 transition-transform duration-300">
+                        <img src="/images/acercade/14.png" alt="2023 - Cursos digitales" class="w-40 h-auto rounded-lg shadow-lg">
+                        <div class="absolute -bottom-4 -left-4 bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow-md">
+                            <span class="text-sm font-medium text-gray-600 dark:text-gray-400">2023</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Image 3 - 2024 -->
+                    <div class="absolute bottom-32 right-16 transform rotate-1 hover:rotate-0 transition-transform duration-300">
+                        <img src="/images/acercade/15.png" alt="2024 - Universidad" class="w-44 h-auto rounded-lg shadow-lg">
+                        <div class="absolute -top-4 -right-4 bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow-md">
+                            <span class="text-sm font-medium text-gray-600 dark:text-gray-400">2024</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Image 4 - 2025 -->
+                    <div class="absolute bottom-4 right-32 transform -rotate-1 hover:rotate-0 transition-transform duration-300">
+                        <img src="/images/acercade/16.png" alt="2025 - Marca personal" class="w-36 h-auto rounded-lg shadow-lg">
+                        <div class="absolute -top-4 -left-4 bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow-md">
+                            <span class="text-sm font-medium text-gray-600 dark:text-gray-400">2025</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mobile images - stacked below text -->
+                <div class="lg:hidden mt-12 grid grid-cols-2 gap-4">
+                    <div class="text-center">
+                        <img src="/images/acercade/13.png" alt="2020 - Studygram" class="w-full h-auto rounded-lg shadow-lg mb-2">
+                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">2020</span>
+                    </div>
+                    <div class="text-center">
+                        <img src="/images/acercade/14.png" alt="2023 - Cursos digitales" class="w-full h-auto rounded-lg shadow-lg mb-2">
+                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">2023</span>
+                    </div>
+                    <div class="text-center">
+                        <img src="/images/acercade/15.png" alt="2024 - Universidad" class="w-full h-auto rounded-lg shadow-lg mb-2">
+                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">2024</span>
+                    </div>
+                    <div class="text-center">
+                        <img src="/images/acercade/16.png" alt="2025 - Marca personal" class="w-full h-auto rounded-lg shadow-lg mb-2">
+                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">2025</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Banner Section -->
     <section class="relative bg-gradient-to-br from-azul-claro/20 via-white to-rosado-pastel/15 dark:from-azul-intenso/20 dark:via-gray-900 dark:to-azul-claro/10 py-20 overflow-hidden">
         <!-- Background Pattern -->
