@@ -45,7 +45,7 @@
         
         <!-- Clean Header -->
         <header class="bg-white dark:bg-gray-900 py-8">
-            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
                 <!-- Theme Toggle - Top Right -->
                 <div class="absolute top-6 right-6">
                     <button
@@ -89,7 +89,7 @@
 
         <!-- Nueva Versión Welcome Section -->
         <section class="relative bg-gradient-to-br from-pink-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-12 md:py-16 overflow-hidden">
-            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                     <!-- Left Side - Text Content -->
                     <div class="text-left space-y-6">
@@ -152,7 +152,7 @@
 
         <!-- Character Types Section -->
         <section class="relative bg-white dark:bg-gray-900 py-16 md:py-20 overflow-hidden">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
                 <!-- Section Header -->
                 <div class="text-center mb-16">
                     <h2 class="text-4xl md:text-5xl lg:text-6xl text-gray-900 dark:text-white mb-4">
@@ -181,16 +181,16 @@
                             La Reina de la<br>Procrastinación
                         </h4>
                         
-                        <p class="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
+                        <p class="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
                             Siempre dices "mañana empiezo", pero nunca lo haces. 
                             Te llena de pendientes y te pierdes en TikTok.
                         </p>
                         
                         <div class="text-left">
-                            <p class="font-semibold text-gray-900 dark:text-white mb-2">
+                            <p class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                                 Lo que necesitas:
                             </p>
-                            <p class="text-gray-700 dark:text-gray-300">
+                            <p class="text-lg text-gray-700 dark:text-gray-300">
                                 disciplina suave y rutinas que la motiven.
                             </p>
                         </div>
@@ -212,16 +212,16 @@
                             La Chica de los "Y si..."
                         </h4>
                         
-                        <p class="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
+                        <p class="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
                             Tiene muchas metas por cumplir, conoces su potencial, 
                             pero el miedo y las dudas la frenan: "¿y si fracaso?".
                         </p>
                         
                         <div class="text-left">
-                            <p class="font-semibold text-gray-900 dark:text-white mb-2">
+                            <p class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                                 Lo que necesitas:
                             </p>
-                            <p class="text-gray-700 dark:text-gray-300">
+                            <p class="text-lg text-gray-700 dark:text-gray-300">
                                 confianza creativa y atreverte a brillar.
                             </p>
                         </div>
@@ -243,15 +243,15 @@
                             La Soñadora Caótica
                         </h4>
                         
-                        <p class="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
+                        <p class="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
                             Te apasiona todo, pero vives en desorden y te quedas sin energía.
                         </p>
                         
                         <div class="text-left">
-                            <p class="font-semibold text-gray-900 dark:text-white mb-2">
+                            <p class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                                 Lo que necesitas:
                             </p>
-                            <p class="text-gray-700 dark:text-gray-300">
+                            <p class="text-lg text-gray-700 dark:text-gray-300">
                                 claridad y orden emocional para avanzar en tus metas.
                             </p>
                         </div>
@@ -269,13 +269,13 @@
 
         <!-- Content Types Section -->
         <section class="relative bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 py-16 md:py-20 overflow-hidden">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
                 <!-- Section Header -->
-                <div class="text-center mb-16">
-                    <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-4">
+                <div class="text-left mb-16">
+                    <h2 class="text-4xl md:text-5xl lg:text-6xl text-gray-900 dark:text-white mb-1">
                         Esto es lo que
                     </h2>
-                    <h3 class="text-4xl md:text-5xl lg:text-6xl font-bold text-red-500 mb-8">
+                    <h3 class="text-4xl md:text-5xl lg:text-6xl text-red-500 mb-8">
                         te va a encantar
                     </h3>
                 </div>
@@ -294,7 +294,7 @@
                             Rutinas que<br>inspiran
                         </h4>
                         
-                        <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">
+                        <p class="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
                             Diseñadas para que vuelvas a ti, sin presión pero con intención.
                         </p>
                     </div>
@@ -311,7 +311,7 @@
                             Arte con<br>propósito
                         </h4>
                         
-                        <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">
+                        <p class="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
                             Creatividad aplicada a tu vida diaria para expresarte y crecer.
                         </p>
                     </div>
@@ -328,7 +328,7 @@
                             Tips de estudio y<br>productividad
                         </h4>
                         
-                        <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">
+                        <p class="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
                             Métodos, hacks y recursos y apps con IA que hacen tu aprendizaje más ligero y efectivo.
                         </p>
                     </div>
@@ -345,7 +345,7 @@
                             Orden emocional<br>& bienestar
                         </h4>
                         
-                        <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">
+                        <p class="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
                             Herramientas para soltar el caos y encontrar claridad y calma.
                         </p>
                     </div>
@@ -355,7 +355,7 @@
 
         <!-- AdSense Banner -->
         <div class="bg-gradient-to-r from-azul-claro/10 via-gray-50 to-rosado-pastel/10 dark:from-azul-intenso/20 dark:via-gray-800 dark:to-azul-claro/20 py-8 border-y border-azul-claro/20">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
                 <x-adsense-banner slot="auto" format="horizontal" class="text-center" />
             </div>
         </div>
@@ -367,17 +367,17 @@
                 <div class="absolute top-0 left-1/4 w-64 h-64 bg-rosado-pastel rounded-full blur-3xl"></div>
                 <div class="absolute bottom-0 right-1/4 w-80 h-80 bg-verde-lima rounded-full blur-3xl"></div>
             </div>
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
                 
                 <!-- Posts Recientes -->
                 <section id="latest" class="mb-20">
                     <div class="relative text-center mb-16">
                         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-azul-claro/30">
-                            <h2 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-azul-intenso via-azul-claro to-rosado-pastel bg-clip-text text-transparent mb-4">
-                                {{ App\Models\SiteSetting::get('home_main_title', __('ui.home.fresh_content')) }}
+                            <h2 class="text-4xl md:text-5xl mb-4">
+                                <span class="text-blue-400">Lo nuevo</span> <span class="text-gray-900 dark:text-white">en el blog</span>
                             </h2>
-                            <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                                {{ App\Models\SiteSetting::get('home_main_subtitle', __('ui.home.fresh_content_desc')) }}
+                            <p class="text-lg text-gray-600 dark:text-gray-300 max-w-4xl mx-auto">
+                                Cada semana comparto plantillas personalizadas, retos para tu glow up, mis métodos de estudio para la universidad y muchas cosas más
                             </p>
                         </div>
                     </div>

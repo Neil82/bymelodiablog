@@ -14,7 +14,7 @@
             </svg>
         </div>
         
-        <div class="max-w-6xl mx-auto py-16 px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-screen-xl mx-auto py-16 px-4 sm:px-6 lg:px-8 relative">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <!-- Left Side - Content -->
                 <div class="text-left space-y-6">
@@ -68,7 +68,7 @@
         </div>
     </div>
 
-    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-screen-xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <!-- About -->
             <div class="text-center md:text-left">
