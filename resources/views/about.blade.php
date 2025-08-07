@@ -74,6 +74,95 @@
         </div>
     </header>
 
+    <!-- Melody Introduction Section -->
+    <section class="relative bg-gradient-to-br from-pink-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-16 overflow-hidden">
+        <!-- Decorative elements background -->
+        <div class="absolute inset-0 opacity-30">
+            <div class="absolute top-10 left-10 w-20 h-20 bg-pink-300 rounded-full blur-xl animate-pulse"></div>
+            <div class="absolute top-1/3 right-20 w-16 h-16 bg-blue-300 rounded-full blur-lg animate-bounce" style="animation-delay: 1s;"></div>
+            <div class="absolute bottom-20 left-1/4 w-24 h-24 bg-green-300 rounded-full blur-2xl animate-pulse" style="animation-delay: 2s;"></div>
+            <div class="absolute top-20 right-1/3 w-12 h-12 bg-yellow-300 rounded-full blur-md animate-bounce" style="animation-delay: 3s;"></div>
+        </div>
+        
+        <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Left Side - Video with decorative elements -->
+                <div class="relative order-2 lg:order-1">
+                    <!-- Decorative text elements around video -->
+                    <div class="absolute -top-6 -left-4 transform rotate-12">
+                        <span class="text-pink-400 font-bold text-lg opacity-80">¿Quién soy?</span>
+                    </div>
+                    <div class="absolute -top-4 -right-6 transform -rotate-12">
+                        <span class="text-blue-400 font-medium text-base opacity-70">persona</span>
+                    </div>
+                    <div class="absolute -bottom-8 -left-6 transform rotate-45">
+                        <span class="text-green-400 font-semibold text-sm opacity-75">mentalidad</span>
+                    </div>
+                    <div class="absolute -bottom-6 -right-4 transform -rotate-45">
+                        <span class="text-purple-400 font-bold text-base opacity-80">glow up real</span>
+                    </div>
+                    
+                    <!-- Video container with collage-style elements -->
+                    <div class="relative">
+                        <!-- Main video -->
+                        <div class="relative z-10 w-full max-w-md mx-auto">
+                            <video 
+                                class="w-full h-auto rounded-2xl shadow-xl" 
+                                autoplay 
+                                muted 
+                                loop 
+                                playsinline
+                                poster="/images/home_1.png"
+                            >
+                                <source src="/images/videos/0807.mp4" type="video/mp4">
+                                Tu navegador no soporta videos HTML5.
+                            </video>
+                        </div>
+                        
+                        <!-- Decorative photo elements (simulated) -->
+                        <div class="absolute -top-4 -left-8 w-20 h-20 bg-gray-200 rounded-lg shadow-md transform rotate-12 z-5 opacity-80">
+                            <div class="w-full h-full bg-gradient-to-br from-blue-200 to-blue-300 rounded-lg flex items-center justify-center">
+                                <span class="text-blue-600 text-xs font-bold">📷</span>
+                            </div>
+                        </div>
+                        <div class="absolute -bottom-6 -right-8 w-24 h-16 bg-gray-200 rounded-lg shadow-md transform -rotate-12 z-5 opacity-80">
+                            <div class="w-full h-full bg-gradient-to-br from-green-200 to-green-300 rounded-lg flex items-center justify-center">
+                                <span class="text-green-600 text-xs font-bold">🎨</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Decorative shapes -->
+                        <div class="absolute top-1/4 -right-6 w-8 h-8 bg-yellow-400 rounded-full opacity-70 animate-pulse"></div>
+                        <div class="absolute bottom-1/3 -left-4 w-6 h-6 bg-pink-400 rounded-full opacity-60 animate-bounce"></div>
+                    </div>
+                </div>
+                
+                <!-- Right Side - Text Content -->
+                <div class="text-left space-y-6 order-1 lg:order-2">
+                    <div class="space-y-4">
+                        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white leading-tight">
+                            Hello girls!
+                        </h2>
+                        
+                        <div class="space-y-4 text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
+                            <p>
+                                Soy Melody, y comencé este rincón porque descubrí que el arte y la organización podían ser mucho más que un simple hobbie: <strong class="text-gray-900 dark:text-white">podían convertirse en un estilo de vida.</strong>
+                            </p>
+                            
+                            <p>
+                                Aquí comparto todo lo que me ayudó a reconectar conmigo misma y poder cambiar mi realidad.
+                            </p>
+                            
+                            <p>
+                                Quiero que cada una de ustedes sienta que <strong class="text-gray-900 dark:text-white">también pueden diseñar una vida auténtica</strong> ♡
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Banner Section -->
     <section class="relative bg-gradient-to-br from-azul-claro/20 via-white to-rosado-pastel/15 dark:from-azul-intenso/20 dark:via-gray-900 dark:to-azul-claro/10 py-20 overflow-hidden">
         <!-- Background Pattern -->
