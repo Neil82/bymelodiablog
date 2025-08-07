@@ -406,8 +406,5 @@
     <!-- Footer -->
     <x-footer />
 
-    <!-- Theme Toggle Script -->
-    <script src="{{ asset('js/theme.js') }}"></script>
-
 </body>
 </html>

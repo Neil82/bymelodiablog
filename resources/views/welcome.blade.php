@@ -16,11 +16,6 @@
         <x-seo-meta />
         
         <!-- Post ID for analytics (not applicable for home page) -->
-        
-        <!-- Language Selector -->
-        <div class="absolute top-4 left-4">
-            @include('components.language-selector')
-        </div>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
