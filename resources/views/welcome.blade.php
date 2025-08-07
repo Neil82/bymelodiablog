@@ -63,7 +63,7 @@
                 </div>
                 
                 <!-- Centered Logo - Large -->
-                <div class="text-center mb-12">
+                <div class="text-center mb-6">
                     <img 
                         id="logo" 
                         src="/images/bymelodia_negro.png" 
@@ -87,89 +87,268 @@
             </div>
         </header>
 
-        <!-- Banner Principal -->
-        @php
-            $bannerImageDesktop = App\Models\SiteSetting::get('banner_image_desktop');
-            $bannerImageMobile = App\Models\SiteSetting::get('banner_image_mobile');
-            $bannerTitle = App\Models\SiteSetting::get('banner_title', __('ui.home.title'));
-            $bannerSubtitle = App\Models\SiteSetting::get('banner_subtitle', __('ui.home.main_headline') . "\n\n" . __('ui.home.sub_headline') . "\n\n" . __('ui.home.description'));
-            $bannerButtonText = App\Models\SiteSetting::get('banner_button_text', __('ui.home.explore_content'));
-            $bannerButtonUrl = App\Models\SiteSetting::get('banner_button_url', '/blog');
-        @endphp
-        
-        <!-- Hero Section -->
-        <section class="relative bg-gradient-to-br from-azul-claro/20 via-white to-rosado-pastel/15 dark:from-azul-intenso/20 dark:via-gray-900 dark:to-azul-claro/10 py-20 overflow-hidden">
-            <!-- Background Pattern -->
-            <div class="absolute inset-0 opacity-30">
-                <svg class="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
-                            <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#a7b9e9" stroke-width="1" opacity="0.3"/>
-                        </pattern>
-                    </defs>
-                    <rect width="100%" height="100%" fill="url(#grid)" />
-                </svg>
-            </div>
-            <!-- Floating elements -->
-            <div class="absolute inset-0">
-                <div class="absolute top-20 left-10 w-32 h-32 bg-azul-claro/40 rounded-full blur-2xl animate-pulse"></div>
-                <div class="absolute bottom-20 right-20 w-40 h-40 bg-rosado-pastel/40 rounded-full blur-2xl animate-pulse" style="animation-delay: 1s;"></div>
-                <div class="absolute top-1/3 right-1/4 w-20 h-20 bg-verde-lima/50 rounded-full blur-xl animate-bounce" style="animation-delay: 2s;"></div>
-            </div>
-            <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <!-- Status Badge -->
-                <div class="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-verde-lima/20 to-azul-claro/20 border-2 border-verde-lima/30 backdrop-blur-md text-sm font-medium mb-8 shadow-xl">
-                    <span class="w-3 h-3 bg-gradient-to-r from-verde-lima to-azul-claro rounded-full mr-3 animate-pulse shadow-md"></span>
-                    <span class="text-azul-intenso dark:text-azul-claro font-semibold">{{ App\Models\SiteSetting::get('home_status_text', __('ui.home.new_content_daily')) }}</span>
-                </div>
-                
-                <!-- Content Cards -->
-                <div class="space-y-6 mb-12">
-                    <!-- Card 1 -->
-                    <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl p-6 md:p-8 shadow-xl border border-azul-claro/30 transform hover:scale-105 transition-all duration-300">
-                        <div class="flex items-center justify-center mb-4">
-                            <span class="text-3xl mr-3">🎵</span>
-                            <h3 class="text-xl md:text-2xl font-bold text-gray-800 dark:text-white text-center">
-                                Descubre la cultura juvenil que está definiendo el futuro
-                            </h3>
+        <!-- Nueva Versión Welcome Section -->
+        <section class="relative bg-gradient-to-br from-pink-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-12 md:py-16 overflow-hidden">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                    <!-- Left Side - Text Content -->
+                    <div class="text-left space-y-6">
+                        <div class="space-y-4">
+                            <p class="text-xl md:text-2xl text-gray-700 dark:text-gray-300 leading-relaxed">
+                                ¿Ambiciosa pero siempre hay algo que te 
+                                detiene de ser tu mejor versión?
+                            </p>
+                            <p class="text-xl md:text-2xl text-gray-700 dark:text-gray-300 leading-relaxed">
+                                <strong>Todas tenemos una espina</strong> que nos 
+                                detiene. Aquí descubrirás cuál es la tuya... 
+                                y cómo transformarla en tu mayor poder
+                            </p>
+                        </div>
+                        
+                        <div class="pt-6">
+                            <h1 class="text-6xl md:text-7xl leading-none">
+                                <span class="font-serif text-gray-800 dark:text-gray-200">Bienvenida a tu</span>
+                                <br>
+                                <span class="font-libre text-pink-500" style="font-size: calc(1em + 2px);">Nueva Versión</span>
+                            </h1>
+                        </div>
+                        
+                        <!-- Decorative elements -->
+                        <div class="flex items-center space-x-4 pt-4">
+                            <div class="flex space-x-2">
+                                <span class="text-2xl">💫</span>
+                                <span class="text-yellow-400 text-xl">✨</span>
+                            </div>
+                            <div class="text-sm text-gray-500 dark:text-gray-400 flex items-center space-x-2">
+                                <span>mind</span>
+                                <span>body</span>
+                                <span>soul</span>
+                            </div>
                         </div>
                     </div>
                     
-                    <!-- Card 2 -->
-                    <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl p-6 md:p-8 shadow-xl border border-rosado-pastel/30 transform hover:scale-105 transition-all duration-300">
-                        <div class="flex items-center justify-center mb-4">
-                            <span class="text-3xl mr-3">✨</span>
-                            <h3 class="text-lg md:text-xl font-semibold text-gray-700 dark:text-gray-200 text-center">
-                                Tendencias, música, lifestyle y todo lo que mueve a la <strong>Generación Z</strong>
-                            </h3>
-                        </div>
-                    </div>
-                    
-                    <!-- Card 3 -->
-                    <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl p-6 md:p-8 shadow-xl border border-verde-lima/30 transform hover:scale-105 transition-all duration-300">
-                        <div class="flex items-center justify-center mb-4">
-                            <span class="text-3xl mr-3">🚀</span>
-                            <h3 class="text-lg md:text-xl font-semibold text-gray-700 dark:text-gray-200 text-center">
-                                Contenido fresco, auténtico y siempre actualizado para mantenerte <strong>al día</strong>
-                            </h3>
+                    <!-- Right Side - Video -->
+                    <div class="relative order-1 lg:order-2">
+                        <div class="relative w-full max-w-md mx-auto rounded-2xl shadow-xl overflow-hidden">
+                            <video 
+                                class="w-full h-auto rounded-2xl" 
+                                autoplay 
+                                muted 
+                                loop 
+                                playsinline
+                                poster="/images/home_1.png"
+                            >
+                                <source src="/videos/0806.mp4" type="video/mp4">
+                            </video>
+                            <!-- Decorative elements around video -->
+                            <div class="absolute -top-4 -right-4 w-8 h-8 bg-pink-400 rounded-full opacity-60"></div>
+                            <div class="absolute -bottom-4 -left-4 w-6 h-6 bg-green-400 rounded-full opacity-60"></div>
+                            <div class="absolute top-1/2 -left-6 w-4 h-4 bg-yellow-400 rounded-full opacity-40"></div>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Action Buttons -->
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="{{ $bannerButtonUrl }}" class="group inline-flex items-center px-8 py-4 bg-gradient-to-r from-azul-intenso to-azul-intenso/90 hover:from-azul-intenso/90 hover:to-azul-intenso text-white font-semibold rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
-                        <span>{{ $bannerButtonText }}</span>
-                        <svg class="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-                        </svg>
-                    </a>
-                    <a href="#latest" class="group inline-flex items-center px-8 py-4 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-900 dark:text-white font-semibold rounded-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700 shadow-md hover:shadow-lg">
-                        <span>{{ __('ui.home.latest_posts') }}</span>
-                        <svg class="ml-2 w-5 h-5 transition-transform group-hover:translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                        </svg>
-                    </a>
+            </div>
+        </section>
+
+        <!-- Character Types Section -->
+        <section class="relative bg-white dark:bg-gray-900 py-16 md:py-20 overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Section Header -->
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl lg:text-6xl text-gray-900 dark:text-white mb-4">
+                        ¿En cuál de estas chicas
+                    </h2>
+                    <h3 class="text-4xl md:text-5xl lg:text-6xl text-blue-600 mb-8">
+                        te reconoces hoy?
+                    </h3>
+                </div>
+
+                <!-- Three Character Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+                    <!-- La Reina de la Procrastinación -->
+                    <div class="bg-gradient-to-b from-green-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-3xl p-8 text-center shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                        <div class="relative mb-6">
+                            <img src="/images/home/1.png" alt="La Reina de la Procrastinación" class="w-48 h-48 mx-auto object-contain">
+                            <!-- Decorative bow -->
+                            <div class="absolute -top-2 -right-2 w-16 h-16">
+                                <svg viewBox="0 0 60 60" class="w-full h-full text-green-300 opacity-70">
+                                    <path d="M30 10C40 15 50 20 55 30C50 40 40 45 30 50C20 45 10 40 5 30C10 20 20 15 30 10Z" fill="currentColor"/>
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <h4 class="text-xl md:text-2xl text-blue-600 mb-4">
+                            La Reina de la<br>Procrastinación
+                        </h4>
+                        
+                        <p class="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
+                            Siempre dices "mañana empiezo", pero nunca lo haces. 
+                            Te llena de pendientes y te pierdes en TikTok.
+                        </p>
+                        
+                        <div class="text-left">
+                            <p class="font-semibold text-gray-900 dark:text-white mb-2">
+                                Lo que necesitas:
+                            </p>
+                            <p class="text-gray-700 dark:text-gray-300">
+                                disciplina suave y rutinas que la motiven.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- La Chica de los "Y si..." -->
+                    <div class="bg-gradient-to-b from-pink-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-3xl p-8 text-center shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                        <div class="relative mb-6">
+                            <img src="/images/home/2.png" alt="La Chica de los Y si..." class="w-48 h-48 mx-auto object-contain">
+                            <!-- Decorative bow -->
+                            <div class="absolute -top-2 -right-2 w-16 h-16">
+                                <svg viewBox="0 0 60 60" class="w-full h-full text-pink-300 opacity-70">
+                                    <path d="M30 10C40 15 50 20 55 30C50 40 40 45 30 50C20 45 10 40 5 30C10 20 20 15 30 10Z" fill="currentColor"/>
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <h4 class="text-xl md:text-2xl text-blue-600 mb-4">
+                            La Chica de los "Y si..."
+                        </h4>
+                        
+                        <p class="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
+                            Tiene muchas metas por cumplir, conoces su potencial, 
+                            pero el miedo y las dudas la frenan: "¿y si fracaso?".
+                        </p>
+                        
+                        <div class="text-left">
+                            <p class="font-semibold text-gray-900 dark:text-white mb-2">
+                                Lo que necesitas:
+                            </p>
+                            <p class="text-gray-700 dark:text-gray-300">
+                                confianza creativa y atreverte a brillar.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- La Soñadora Caótica -->
+                    <div class="bg-gradient-to-b from-blue-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-3xl p-8 text-center shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                        <div class="relative mb-6">
+                            <img src="/images/home/3.png" alt="La Soñadora Caótica" class="w-48 h-48 mx-auto object-contain">
+                            <!-- Decorative bow -->
+                            <div class="absolute -top-2 -right-2 w-16 h-16">
+                                <svg viewBox="0 0 60 60" class="w-full h-full text-blue-300 opacity-70">
+                                    <path d="M30 10C40 15 50 20 55 30C50 40 40 45 30 50C20 45 10 40 5 30C10 20 20 15 30 10Z" fill="currentColor"/>
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <h4 class="text-xl md:text-2xl text-blue-600 mb-4">
+                            La Soñadora Caótica
+                        </h4>
+                        
+                        <p class="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
+                            Te apasiona todo, pero vives en desorden y te quedas sin energía.
+                        </p>
+                        
+                        <div class="text-left">
+                            <p class="font-semibold text-gray-900 dark:text-white mb-2">
+                                Lo que necesitas:
+                            </p>
+                            <p class="text-gray-700 dark:text-gray-300">
+                                claridad y orden emocional para avanzar en tus metas.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom attribution -->
+                <div class="text-center mt-12">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        Imágenes de @nikaniki
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Content Types Section -->
+        <section class="relative bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 py-16 md:py-20 overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Section Header -->
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-4">
+                        Esto es lo que
+                    </h2>
+                    <h3 class="text-4xl md:text-5xl lg:text-6xl font-bold text-red-500 mb-8">
+                        te va a encantar
+                    </h3>
+                </div>
+
+                <!-- Four Content Type Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
+                    <!-- Rutinas que inspiran -->
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 text-center shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                        <div class="mb-6">
+                            <div class="bg-gray-100 dark:bg-gray-700 rounded-xl p-4 mb-4">
+                                <img src="/images/home/17.png" alt="Rutinas que inspiran" class="w-full h-32 object-cover rounded-lg">
+                            </div>
+                        </div>
+                        
+                        <h4 class="text-xl md:text-2xl font-bold text-red-500 mb-4">
+                            Rutinas que<br>inspiran
+                        </h4>
+                        
+                        <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">
+                            Diseñadas para que vuelvas a ti, sin presión pero con intención.
+                        </p>
+                    </div>
+
+                    <!-- Arte con propósito -->
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 text-center shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                        <div class="mb-6">
+                            <div class="bg-gray-100 dark:bg-gray-700 rounded-xl p-4 mb-4">
+                                <img src="/images/home/18.png" alt="Arte con propósito" class="w-full h-32 object-cover rounded-lg">
+                            </div>
+                        </div>
+                        
+                        <h4 class="text-xl md:text-2xl font-bold text-red-500 mb-4">
+                            Arte con<br>propósito
+                        </h4>
+                        
+                        <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">
+                            Creatividad aplicada a tu vida diaria para expresarte y crecer.
+                        </p>
+                    </div>
+
+                    <!-- Tips de estudio y productividad -->
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 text-center shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                        <div class="mb-6">
+                            <div class="bg-gray-100 dark:bg-gray-700 rounded-xl p-4 mb-4">
+                                <img src="/images/home/19.png" alt="Tips de estudio y productividad" class="w-full h-32 object-cover rounded-lg">
+                            </div>
+                        </div>
+                        
+                        <h4 class="text-xl md:text-2xl font-bold text-red-500 mb-4">
+                            Tips de estudio y<br>productividad
+                        </h4>
+                        
+                        <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">
+                            Métodos, hacks y recursos y apps con IA que hacen tu aprendizaje más ligero y efectivo.
+                        </p>
+                    </div>
+
+                    <!-- Orden emocional & bienestar -->
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 text-center shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                        <div class="mb-6">
+                            <div class="bg-gray-100 dark:bg-gray-700 rounded-xl p-4 mb-4">
+                                <img src="/images/home/20.png" alt="Orden emocional & bienestar" class="w-full h-32 object-cover rounded-lg">
+                            </div>
+                        </div>
+                        
+                        <h4 class="text-xl md:text-2xl font-bold text-red-500 mb-4">
+                            Orden emocional<br>& bienestar
+                        </h4>
+                        
+                        <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">
+                            Herramientas para soltar el caos y encontrar claridad y calma.
+                        </p>
+                    </div>
                 </div>
             </div>
         </section>

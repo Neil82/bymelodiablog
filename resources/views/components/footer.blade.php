@@ -1,27 +1,70 @@
 <!-- Footer -->
 <footer class="bg-gradient-to-b from-azul-claro/10 to-rosado-pastel/10 dark:from-azul-intenso/20 dark:to-azul-claro/20 border-t border-azul-claro/20 mt-16">
-    <!-- Newsletter Section -->
-    <div class="bg-brand-gradient">
-        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row items-center justify-between">
-                <div class="text-white mb-4 md:mb-0">
-                    <h3 class="text-xl font-bold mb-2">{{ __('ui.newsletter.title') }}</h3>
-                    <p class="text-sm opacity-90">{{ __('ui.newsletter.subtitle') }}</p>
+    <!-- Premium Content Subscription Section -->
+    <div class="bg-gradient-to-br from-green-50 via-white to-yellow-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 relative overflow-hidden">
+        <!-- Decorative flower elements -->
+        <div class="absolute top-8 left-8 opacity-20">
+            <svg width="120" height="120" viewBox="0 0 120 120" class="text-green-300">
+                <path d="M60 20C70 30 80 40 90 50C80 60 70 70 60 80C50 70 40 60 30 50C40 40 50 30 60 20Z" fill="currentColor"/>
+            </svg>
+        </div>
+        <div class="absolute bottom-8 right-8 opacity-20">
+            <svg width="80" height="80" viewBox="0 0 80 80" class="text-yellow-300">
+                <path d="M40 10C50 20 60 30 70 40C60 50 50 60 40 70C30 60 20 50 10 40C20 30 30 20 40 10Z" fill="currentColor"/>
+            </svg>
+        </div>
+        
+        <div class="max-w-6xl mx-auto py-16 px-4 sm:px-6 lg:px-8 relative">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Left Side - Content -->
+                <div class="text-left space-y-6">
+                    <div class="space-y-4">
+                        <h2 class="text-4xl md:text-5xl font-bold text-green-600 leading-tight font-libre">
+                            Contenido premium
+                        </h2>
+                        <h3 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white leading-tight font-libre">
+                            sólo para chicas igual de ambiciosas que yo
+                        </h3>
+                    </div>
+                    
+                    <div class="space-y-4 text-gray-700 dark:text-gray-300 text-lg">
+                        <p class="leading-relaxed">
+                            Recibe en tu correo plantillas exclusivas, tips que no publico en redes y rutinas que harán tu vida más ligera y bonita.
+                        </p>
+                        <p class="leading-relaxed">
+                            Nada de spam, solo cosas de valor para ti y tu crecimiento.
+                        </p>
+                    </div>
                 </div>
-                <form id="newsletter-form" class="w-full md:w-auto flex flex-col sm:flex-row gap-2">
-                    @csrf
-                    <input type="email" 
-                           name="email" 
-                           placeholder="{{ __('ui.newsletter.email_placeholder') }}" 
-                           required
-                           class="px-4 py-2 rounded-lg text-gray-900 dark:text-white bg-white dark:bg-gray-800 border-0 focus:ring-2 focus:ring-white dark:focus:ring-purple-400 flex-1 md:w-64">
-                    <button type="submit" 
-                            class="px-6 py-3 bg-white/90 backdrop-blur-sm text-azul-intenso font-semibold rounded-xl hover:bg-white transition-all duration-300 transform hover:scale-105 shadow-lg">
-                        {{ __('ui.newsletter.subscribe') }}
-                    </button>
-                </form>
+                
+                <!-- Right Side - Form -->
+                <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-xl border border-gray-100 dark:border-gray-700">
+                    <form id="premium-newsletter-form" class="space-y-6">
+                        @csrf
+                        <div>
+                            <input type="text" 
+                                   name="name" 
+                                   placeholder="Nombre" 
+                                   required
+                                   class="w-full px-6 py-4 rounded-2xl border-2 border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 focus:border-green-500 focus:ring-0 transition-colors text-lg">
+                        </div>
+                        
+                        <div>
+                            <input type="email" 
+                                   name="email" 
+                                   placeholder="El correo que usas mas" 
+                                   required
+                                   class="w-full px-6 py-4 rounded-2xl border-2 border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 focus:border-green-500 focus:ring-0 transition-colors text-lg">
+                        </div>
+                        
+                        <button type="submit" 
+                                class="w-full px-8 py-4 bg-green-500 hover:bg-green-600 text-white font-bold text-lg rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                            Unirme ahora
+                        </button>
+                    </form>
+                    <div id="premium-newsletter-message" class="mt-4 text-sm hidden"></div>
+                </div>
             </div>
-            <div id="newsletter-message" class="mt-2 text-sm text-white hidden"></div>
         </div>
     </div>
 
@@ -116,11 +159,11 @@
     </div>
 </footer>
 
-<!-- Newsletter JavaScript -->
+<!-- Premium Newsletter JavaScript -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('newsletter-form');
-    const messageDiv = document.getElementById('newsletter-message');
+    const form = document.getElementById('premium-newsletter-form');
+    const messageDiv = document.getElementById('premium-newsletter-message');
     
     if (form) {
         form.addEventListener('submit', async function(e) {
@@ -132,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Disable form
             button.disabled = true;
-            button.textContent = '...';
+            button.textContent = 'Procesando...';
             
             try {
                 const response = await fetch('{{ route("newsletter.subscribe") }}', {
@@ -154,12 +197,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 messageDiv.classList.remove('hidden');
                 
                 if (data.success) {
-                    messageDiv.classList.remove('text-red-300');
-                    messageDiv.classList.add('text-white');
+                    messageDiv.classList.remove('text-red-500');
+                    messageDiv.classList.add('text-green-600');
                     form.reset();
                 } else {
-                    messageDiv.classList.remove('text-white');
-                    messageDiv.classList.add('text-red-300');
+                    messageDiv.classList.remove('text-green-600');
+                    messageDiv.classList.add('text-red-500');
                 }
                 
                 // Hide message after 5 seconds
@@ -169,8 +212,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 
             } catch (error) {
                 messageDiv.textContent = 'Error al procesar la solicitud';
-                messageDiv.classList.remove('hidden', 'text-white');
-                messageDiv.classList.add('text-red-300');
+                messageDiv.classList.remove('hidden', 'text-green-600');
+                messageDiv.classList.add('text-red-500');
             } finally {
                 // Re-enable form
                 button.disabled = false;

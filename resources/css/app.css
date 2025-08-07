@@ -2,6 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Global Font Application */
+body {
+    font-family: 'LibreBaskerville', serif;
+}
+
+/* Custom Fonts */
+@font-face {
+    font-family: 'Candlescript';
+    src: url('/fonts/Candlescript Demo Version.woff2') format('woff2'),
+         url('/fonts/Candlescript Demo Version.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Brasika';
+    src: url('/fonts/brasika-display-trial 2.woff2') format('woff2'),
+         url('/fonts/brasika-display-trial 2.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'LibreBaskerville';
+    src: url('/fonts/LibreBaskerville-Regular.woff2') format('woff2'),
+         url('/fonts/LibreBaskerville-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'LibreBaskerville';
+    src: url('/fonts/LibreBaskerville-Bold.woff2') format('woff2'),
+         url('/fonts/LibreBaskerville-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'LibreBaskerville';
+    src: url('/fonts/LibreBaskerville-Italic.woff2') format('woff2'),
+         url('/fonts/LibreBaskerville-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
 /* Nueva paleta de colores ByMelodia */
 :root {
     --azul-claro: #a7b9e9;
@@ -107,6 +158,7 @@ html {
 /* Post Content Styling for Quill Editor Output */
 .post-content {
     line-height: 1.8;
+    font-family: 'LibreBaskerville', serif;
 }
 
 .post-content p {
@@ -515,6 +567,10 @@ html {
 }
 
 /* Legal pages markdown content styling */
+.markdown-content {
+    font-family: 'LibreBaskerville', serif;
+}
+
 .markdown-content p {
     margin-bottom: 1rem;
     line-height: 1.7;

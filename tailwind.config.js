@@ -13,7 +13,11 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['LibreBaskerville', ...defaultTheme.fontFamily.serif],
+                'candlescript': ['Candlescript', 'cursive'],
+                'brasika': ['Brasika', 'display'],
+                'libre': ['LibreBaskerville', 'serif'],
+                'script': ['Candlescript', 'cursive'],
             },
             colors: {
                 'azul-claro': '#a7b9e9',
