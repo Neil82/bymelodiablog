@@ -19,7 +19,7 @@
                 <!-- Left Side - Content -->
                 <div class="text-left space-y-6">
                     <div class="space-y-4">
-                        <h2 class="text-4xl md:text-5xl font-bold text-green-600 leading-tight font-libre">
+                        <h2 class="text-4xl md:text-5xl font-normal text-green-400 leading-tight font-libre">
                             Contenido premium
                         </h2>
                         <h3 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white leading-tight font-libre">
@@ -39,28 +39,28 @@
                 
                 <!-- Right Side - Form -->
                 <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-xl border border-gray-100 dark:border-gray-700">
-                    <form id="premium-newsletter-form" class="space-y-6">
+                    <form id="premium-newsletter-form" class="space-y-4">
                         @csrf
                         <div>
                             <input type="text" 
                                    name="name" 
                                    placeholder="Nombre" 
                                    required
-                                   class="w-full px-8 py-5 rounded-full border-2 border-green-200 dark:border-green-300 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:border-green-400 focus:ring-0 transition-colors text-lg outline-none">
+                                   class="w-full px-8 py-4 rounded-full border-2 border-green-100 dark:border-green-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:border-green-300 focus:ring-0 transition-colors text-base outline-none">
                         </div>
                         
-                        <div>
+                        <div class="flex gap-3 items-center">
                             <input type="email" 
                                    name="email" 
                                    placeholder="El correo que usas mas" 
                                    required
-                                   class="w-full px-8 py-5 rounded-full border-2 border-green-200 dark:border-green-300 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:border-green-400 focus:ring-0 transition-colors text-lg outline-none">
+                                   class="flex-1 px-8 py-4 rounded-full border-2 border-green-100 dark:border-green-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:border-green-300 focus:ring-0 transition-colors text-base outline-none">
+                            
+                            <button type="submit" 
+                                    class="px-6 py-4 bg-gradient-to-r from-green-300 to-green-400 hover:from-green-400 hover:to-green-500 text-white font-medium text-base rounded-full transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg border-0 outline-none whitespace-nowrap">
+                                Unirme ahora
+                            </button>
                         </div>
-                        
-                        <button type="submit" 
-                                class="w-full px-8 py-5 bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white font-semibold text-lg rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border-0 outline-none">
-                            Unirme ahora
-                        </button>
                     </form>
                     <div id="premium-newsletter-message" class="mt-4 text-sm hidden"></div>
                 </div>
