@@ -87,7 +87,7 @@
         </header>
 
         <!-- Nueva Versión Welcome Section -->
-        <section class="relative bg-gradient-to-br from-pink-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen flex items-center overflow-hidden">
+        <section class="relative bg-gradient-to-br from-pink-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen flex items-center overflow-hidden pt-32 md:pt-40">
             <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                     <!-- Left Side - Text Content -->
