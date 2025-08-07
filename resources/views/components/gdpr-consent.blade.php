@@ -89,11 +89,12 @@
                     @endif
                 }
                 
-                // Initialize any existing ad slots
+                // Initialize any existing ad slots that need initialization
                 if (window.adsbygoogle) {
-                    const ads = document.querySelectorAll('.adsbygoogle');
+                    const ads = document.querySelectorAll('.adsbygoogle[data-needs-init="true"]');
                     ads.forEach(ad => {
                         if (!ad.dataset.adsbygoogleStatus) {
+                            ad.removeAttribute('data-needs-init');
                             (adsbygoogle = window.adsbygoogle || []).push({});
                         }
                     });

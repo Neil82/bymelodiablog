@@ -56,12 +56,12 @@ class AnalyticsTracker {
             localStorage.setItem(STORAGE_KEY, newSessionId);
             localStorage.setItem(STORAGE_TIME_KEY, Date.now().toString());
             
-            console.log('Created new session:', newSessionId);
+            console.debug('Created new session:', newSessionId);
             return newSessionId;
             
         } catch (error) {
             // Fallback if localStorage is not available
-            console.warn('localStorage not available, using temporary session');
+            console.debug('localStorage not available, using temporary session');
             return this.generateSessionId();
         }
     }
@@ -113,7 +113,7 @@ class AnalyticsTracker {
             }
 
             const result = await response.json();
-            console.log('Analytics session initialized:', result.session_id);
+            console.debug('Analytics session initialized:', result.session_id);
         } catch (error) {
             console.error('Failed to initialize session:', error);
         }
@@ -476,7 +476,7 @@ class AnalyticsTracker {
             if (content && content.trim() !== '') {
                 const postId = parseInt(content);
                 if (!isNaN(postId)) {
-                    console.log('Found post ID from meta tag:', postId);
+                    console.debug('Found post ID from meta tag:', postId);
                     return postId;
                 }
             }
@@ -488,10 +488,13 @@ class AnalyticsTracker {
         // Pattern for /blog/post-slug or /posts/123
         const blogMatch = pathname.match(/\/blog\/[\w-]+/) || pathname.match(/\/posts?\/(\d+)/);
         if (blogMatch) {
-            console.log('Detected blog post URL but no meta tag found:', pathname);
+            console.debug('Detected blog post URL but no meta tag found:', pathname);
         }
 
-        console.log('No post ID found for:', pathname);
+        // Only log for non-home pages to reduce noise
+        if (pathname !== '/') {
+            console.debug('No post ID found for:', pathname);
+        }
         return null;
     }
 

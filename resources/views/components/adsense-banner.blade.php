@@ -12,11 +12,8 @@
              data-ad-client="{{ $adsenseClientId }}"
              data-ad-slot="{{ $slot }}"
              @if($format !== 'auto') data-ad-format="{{ $format }}" @endif
-             @if($responsive) data-full-width-responsive="true" @endif></ins>
-        
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
+             @if($responsive) data-full-width-responsive="true" @endif
+             data-needs-init="true"></ins>
     </div>
 @else
     <!-- AdSense Placeholder - Only visible to admins -->
