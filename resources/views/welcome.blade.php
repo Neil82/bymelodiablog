@@ -352,12 +352,6 @@
             </div>
         </section>
 
-        <!-- AdSense Banner -->
-        <div class="bg-gradient-to-r from-azul-claro/10 via-gray-50 to-rosado-pastel/10 dark:from-azul-intenso/20 dark:via-gray-800 dark:to-azul-claro/20 py-8 border-y border-azul-claro/20">
-            <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
-                <x-adsense-banner slot="auto" format="horizontal" class="text-center" />
-            </div>
-        </div>
 
         <!-- Main Content -->
         <main class="py-16 bg-gradient-to-b from-gray-50 via-white to-azul-claro/5 dark:from-gray-800 dark:via-gray-900 dark:to-azul-intenso/10 relative">
