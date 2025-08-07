@@ -472,9 +472,14 @@ class AnalyticsTracker {
         // Try to get post ID from meta tag first
         const metaPostId = document.querySelector('meta[name="post-id"]');
         if (metaPostId) {
-            const postId = parseInt(metaPostId.getAttribute('content'));
-            console.log('Found post ID from meta tag:', postId);
-            return postId;
+            const content = metaPostId.getAttribute('content');
+            if (content && content.trim() !== '') {
+                const postId = parseInt(content);
+                if (!isNaN(postId)) {
+                    console.log('Found post ID from meta tag:', postId);
+                    return postId;
+                }
+            }
         }
 
         // Try to extract from URL patterns

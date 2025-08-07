@@ -15,8 +15,7 @@
         <!-- SEO Meta Tags -->
         <x-seo-meta />
         
-        <!-- Post ID for analytics (if applicable) -->
-        <meta name="post-id" content="">
+        <!-- Post ID for analytics (not applicable for home page) -->
         
         <!-- Language Selector -->
         <div class="absolute top-4 left-4">
@@ -509,8 +508,6 @@
         <!-- GDPR Consent -->
         <x-gdpr-consent />
 
-        <!-- Analytics Tracking -->
-        <script src="{{ asset('js/analytics-tracker.js') }}"></script>
 
     </body>
 </html>
