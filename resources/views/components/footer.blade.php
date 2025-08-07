@@ -46,7 +46,7 @@
                                    name="name" 
                                    placeholder="Nombre" 
                                    required
-                                   class="w-full px-6 py-4 rounded-2xl border-2 border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 focus:border-green-500 focus:ring-0 transition-colors text-lg">
+                                   class="w-full px-8 py-5 rounded-full border-2 border-green-200 dark:border-green-300 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:border-green-400 focus:ring-0 transition-colors text-lg outline-none">
                         </div>
                         
                         <div>
@@ -54,11 +54,11 @@
                                    name="email" 
                                    placeholder="El correo que usas mas" 
                                    required
-                                   class="w-full px-6 py-4 rounded-2xl border-2 border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 focus:border-green-500 focus:ring-0 transition-colors text-lg">
+                                   class="w-full px-8 py-5 rounded-full border-2 border-green-200 dark:border-green-300 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:border-green-400 focus:ring-0 transition-colors text-lg outline-none">
                         </div>
                         
                         <button type="submit" 
-                                class="w-full px-8 py-4 bg-green-500 hover:bg-green-600 text-white font-bold text-lg rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                                class="w-full px-8 py-5 bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white font-semibold text-lg rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border-0 outline-none">
                             Unirme ahora
                         </button>
                     </form>
