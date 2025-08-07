@@ -214,18 +214,30 @@
                     <div class="grid grid-cols-2 gap-6">
                         <!-- Top row: 13.png and 14.png -->
                         <div>
-                            <img src="/images/acercade/13.png" alt="2020 - Studygram" class="w-full h-auto">
+                            <picture>
+                                <source srcset="/images/acercade/13.webp" type="image/webp">
+                                <img src="/images/acercade/13.png" alt="2020 - Studygram" class="w-full h-auto">
+                            </picture>
                         </div>
                         <div>
-                            <img src="/images/acercade/14.png" alt="2023 - Cursos digitales" class="w-full h-auto">
+                            <picture>
+                                <source srcset="/images/acercade/14.webp" type="image/webp">
+                                <img src="/images/acercade/14.png" alt="2023 - Cursos digitales" class="w-full h-auto">
+                            </picture>
                         </div>
                         
                         <!-- Bottom row: 15.png and 16.png -->
                         <div>
-                            <img src="/images/acercade/15.png" alt="2024 - Universidad" class="w-full h-auto">
+                            <picture>
+                                <source srcset="/images/acercade/15.webp" type="image/webp">
+                                <img src="/images/acercade/15.png" alt="2024 - Universidad" class="w-full h-auto">
+                            </picture>
                         </div>
                         <div>
-                            <img src="/images/acercade/16.png" alt="2025 - Marca personal" class="w-full h-auto">
+                            <picture>
+                                <source srcset="/images/acercade/16.webp" type="image/webp">
+                                <img src="/images/acercade/16.png" alt="2025 - Marca personal" class="w-full h-auto">
+                            </picture>
                         </div>
                     </div>
                 </div>
@@ -250,19 +262,31 @@
                 <div class="flex justify-center">
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-10 max-w-5xl">
                         <div class="relative shadow-lg transform hover:scale-105 transition-all duration-300 rounded-xl overflow-hidden">
-                            <img src="/images/acercade/4.png" alt="Salidas a la cafetería" class="w-full h-64 object-cover">
+                            <picture>
+                                <source srcset="/images/acercade/4.webp" type="image/webp">
+                                <img src="/images/acercade/4.png" alt="Salidas a la cafetería" class="w-full h-64 object-cover">
+                            </picture>
                         </div>
                         
                         <div class="relative shadow-lg transform hover:scale-105 transition-all duration-300 rounded-xl overflow-hidden">
-                            <img src="/images/acercade/5.png" alt="La playita" class="w-full h-64 object-cover">
+                            <picture>
+                                <source srcset="/images/acercade/5.webp" type="image/webp">
+                                <img src="/images/acercade/5.png" alt="La playita" class="w-full h-64 object-cover">
+                            </picture>
                         </div>
                         
                         <div class="relative shadow-lg transform hover:scale-105 transition-all duration-300 rounded-xl overflow-hidden">
-                            <img src="/images/acercade/6.jpg" alt="Los makiss" class="w-full h-64 object-cover">
+                            <picture>
+                                <source srcset="/images/acercade/6.webp" type="image/webp">
+                                <img src="/images/acercade/6.jpg" alt="Los makiss" class="w-full h-64 object-cover">
+                            </picture>
                         </div>
                         
                         <div class="relative shadow-lg transform hover:scale-105 transition-all duration-300 rounded-xl overflow-hidden">
-                            <img src="/images/acercade/7.png" alt="Bailar marinera" class="w-full h-64 object-cover">
+                            <picture>
+                                <source srcset="/images/acercade/7.webp" type="image/webp">
+                                <img src="/images/acercade/7.png" alt="Bailar marinera" class="w-full h-64 object-cover">
+                            </picture>
                         </div>
                     </div>
                 </div>
@@ -271,23 +295,38 @@
                 <div class="flex justify-center">
                     <div class="grid grid-cols-2 md:grid-cols-5 gap-8 md:gap-10 max-w-6xl">
                         <div class="relative shadow-lg transform hover:scale-105 transition-all duration-300 rounded-xl overflow-hidden">
-                            <img src="/images/acercade/8.jpg" alt="Noche de pelis" class="w-full h-64 object-cover">
+                            <picture>
+                                <source srcset="/images/acercade/8.webp" type="image/webp">
+                                <img src="/images/acercade/8.jpg" alt="Noche de pelis" class="w-full h-64 object-cover">
+                            </picture>
                         </div>
                         
                         <div class="relative shadow-lg transform hover:scale-105 transition-all duration-300 rounded-xl overflow-hidden">
-                            <img src="/images/acercade/9.png" alt="Museos" class="w-full h-64 object-cover">
+                            <picture>
+                                <source srcset="/images/acercade/9.webp" type="image/webp">
+                                <img src="/images/acercade/9.png" alt="Museos" class="w-full h-64 object-cover">
+                            </picture>
                         </div>
                         
                         <div class="relative shadow-lg transform hover:scale-105 transition-all duration-300 rounded-xl overflow-hidden">
-                            <img src="/images/acercade/10.png" alt="Sesión de fotos" class="w-full h-64 object-cover">
+                            <picture>
+                                <source srcset="/images/acercade/10.webp" type="image/webp">
+                                <img src="/images/acercade/10.png" alt="Sesión de fotos" class="w-full h-64 object-cover">
+                            </picture>
                         </div>
                         
                         <div class="relative shadow-lg transform hover:scale-105 transition-all duration-300 rounded-xl overflow-hidden">
-                            <img src="/images/acercade/11.png" alt="Días soleados" class="w-full h-64 object-cover">
+                            <picture>
+                                <source srcset="/images/acercade/11.webp" type="image/webp">
+                                <img src="/images/acercade/11.png" alt="Días soleados" class="w-full h-64 object-cover">
+                            </picture>
                         </div>
                         
                         <div class="relative shadow-lg transform hover:scale-105 transition-all duration-300 rounded-xl overflow-hidden">
-                            <img src="/images/acercade/12.png" alt="Dibujar + música" class="w-full h-64 object-cover">
+                            <picture>
+                                <source srcset="/images/acercade/12.webp" type="image/webp">
+                                <img src="/images/acercade/12.png" alt="Dibujar + música" class="w-full h-64 object-cover">
+                            </picture>
                         </div>
                     </div>
                 </div>
@@ -301,12 +340,18 @@
         <div class="hidden md:block">
             <!-- Left Image -->
             <div class="absolute left-0 top-1/2 transform -translate-y-1/2 w-64 lg:w-80 h-96 lg:h-[500px]">
-                <img src="/images/acercade/left.jpg" alt="Inspiración izquierda" class="w-full h-full object-cover rounded-r-3xl shadow-2xl">
+                <picture>
+                    <source srcset="/images/acercade/left.webp" type="image/webp">
+                    <img src="/images/acercade/left.jpg" alt="Inspiración izquierda" class="w-full h-full object-cover rounded-r-3xl shadow-2xl">
+                </picture>
             </div>
             
             <!-- Right Image -->
             <div class="absolute right-0 top-1/2 transform -translate-y-1/2 w-64 lg:w-80 h-96 lg:h-[500px]">
-                <img src="/images/acercade/right.jpg" alt="Inspiración derecha" class="w-full h-full object-cover rounded-l-3xl shadow-2xl">
+                <picture>
+                    <source srcset="/images/acercade/right.webp" type="image/webp">
+                    <img src="/images/acercade/right.jpg" alt="Inspiración derecha" class="w-full h-full object-cover rounded-l-3xl shadow-2xl">
+                </picture>
             </div>
         </div>
         
@@ -336,10 +381,16 @@
             <!-- Mobile Images - Below text for mobile -->
             <div class="md:hidden mt-12 grid grid-cols-2 gap-4">
                 <div class="rounded-2xl overflow-hidden shadow-lg">
-                    <img src="/images/acercade/left.jpg" alt="Inspiración" class="w-full h-48 object-cover">
+                    <picture>
+                        <source srcset="/images/acercade/left.webp" type="image/webp">
+                        <img src="/images/acercade/left.jpg" alt="Inspiración" class="w-full h-48 object-cover">
+                    </picture>
                 </div>
                 <div class="rounded-2xl overflow-hidden shadow-lg">
-                    <img src="/images/acercade/right.jpg" alt="Inspiración" class="w-full h-48 object-cover">
+                    <picture>
+                        <source srcset="/images/acercade/right.webp" type="image/webp">
+                        <img src="/images/acercade/right.jpg" alt="Inspiración" class="w-full h-48 object-cover">
+                    </picture>
                 </div>
             </div>
         </div>
