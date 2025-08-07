@@ -98,10 +98,18 @@
             
             <!-- Description Card -->
             <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-3xl p-8 shadow-xl border border-azul-claro/30">
-                <h1 class="text-3xl md:text-4xl lg:text-5xl font-medium leading-tight">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-medium leading-tight mb-6">
                     <span class="text-gray-900 dark:text-white">Bienvenida a </span>
                     <span class="text-red-500">tu nueva versión</span>
                 </h1>
+                
+                <!-- Animated Subtitle -->
+                <div class="subtitle-animation opacity-0 transform translate-y-4 transition-all duration-1000 ease-out delay-1000">
+                    <p class="text-xl md:text-2xl lg:text-3xl font-medium leading-relaxed">
+                        <span class="text-blue-500">Nuevo contenido</span>
+                        <span class="text-gray-700 dark:text-gray-300"> cada semana</span>
+                    </p>
+                </div>
             </div>
         </div>
     </div>
@@ -187,6 +195,20 @@
 
     <!-- Footer -->
     <x-footer />
+
+    <!-- Subtitle Animation Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Trigger animation after page load
+            setTimeout(function() {
+                const subtitle = document.querySelector('.subtitle-animation');
+                if (subtitle) {
+                    subtitle.classList.remove('opacity-0', 'translate-y-4');
+                    subtitle.classList.add('opacity-100', 'translate-y-0');
+                }
+            }, 500); // Start animation 500ms after page load
+        });
+    </script>
 
 </body>
 </html>
