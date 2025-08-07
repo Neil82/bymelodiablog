@@ -38,7 +38,7 @@
                 </div>
                 
                 <!-- Right Side - Form -->
-                <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-xl border border-gray-100 dark:border-gray-700">
+                <div>
                     <form id="premium-newsletter-form" class="space-y-4">
                         @csrf
                         <div>
@@ -49,17 +49,19 @@
                                    class="w-full px-8 py-4 rounded-full border-2 border-green-100 dark:border-green-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:border-green-300 focus:ring-0 transition-colors text-base outline-none">
                         </div>
                         
-                        <div class="flex gap-3 items-center">
+                        <div class="space-y-3">
                             <input type="email" 
                                    name="email" 
                                    placeholder="El correo que usas mas" 
                                    required
-                                   class="flex-1 px-8 py-4 rounded-full border-2 border-green-100 dark:border-green-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:border-green-300 focus:ring-0 transition-colors text-base outline-none">
+                                   class="w-full px-8 py-4 rounded-full border-2 border-green-100 dark:border-green-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:border-green-300 focus:ring-0 transition-colors text-base outline-none">
                             
-                            <button type="submit" 
-                                    class="px-6 py-4 bg-gradient-to-r from-green-300 to-green-400 hover:from-green-400 hover:to-green-500 text-white font-medium text-base rounded-full transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg border-0 outline-none whitespace-nowrap">
-                                Unirme ahora
-                            </button>
+                            <div class="flex justify-end">
+                                <button type="submit" 
+                                        class="px-6 py-4 bg-gradient-to-r from-green-300 to-green-400 hover:from-green-400 hover:to-green-500 text-white font-medium text-base rounded-full transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg border-0 outline-none whitespace-nowrap">
+                                    Unirme ahora
+                                </button>
+                            </div>
                         </div>
                     </form>
                     <div id="premium-newsletter-message" class="mt-4 text-sm hidden"></div>
