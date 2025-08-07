@@ -29,7 +29,7 @@ return [
         'title' => 'ByMelodia Blog',
         'subtitle' => 'Discover youth content, music and trends',
         'read_more' => 'Read more',
-        'view_all_content' => 'View all content',
+        'view_all_content' => 'Discover more',
         'comments' => 'comments',
         'no_comments' => 'No comments',
         'published_on' => 'Published on',
