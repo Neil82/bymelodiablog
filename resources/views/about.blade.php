@@ -112,9 +112,8 @@
                                 muted 
                                 loop 
                                 playsinline
-                                poster="/images/home_1.png"
                             >
-                                <source src="/images/videos/0807.mp4" type="video/mp4">
+                                <source src="/videos/0807.mp4" type="video/mp4">
                                 Tu navegador no soporta videos HTML5.
                             </video>
                         </div>
